@@ -34,6 +34,15 @@ class Squares
 
           PrintOwnership(0, ownerless_squares); // Prints (:) since Mode == 0 and 
                                                 // PrintModeArray == ownerless_squares
+          int m = Convert.ToInt16(Console.ReadLine());
+                    int n = Convert.ToInt16(Console.ReadLine());
+          lines = Stage2ExtraLine(lines, m , n);
+          OwnershipTag(player_ownership, lines, ownerless_squares, computer_ownership);
+          Console.Clear();
+LinePrint(lines); // Prints all the lines including the inner lines
+PrintOwnership(1, player_ownership);
+PrintOwnership(0, ownerless_squares);
+          
 
 
 
@@ -182,14 +191,18 @@ class Squares
 
      }
 
-          
+
+     static bool[,] Stage2ExtraLine(bool[,] lines_array, int i, int j) // biri çift biri tek olcak
+
+     {
+          bool[,] new_lines_array = lines_array;
+          new_lines_array[i, j] = true;
+          return new_lines_array;
+     }
 
 
 
 
 
-     
-
-    
      
 }
