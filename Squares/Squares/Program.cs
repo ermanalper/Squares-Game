@@ -2,18 +2,20 @@
 class Squares
 {
      static Random random = new Random();
-     static void Main()
-     {
-          Console.Clear();
-          bool[,] lines = new bool[19, 33]; //   (even, even) points are constant
+     static bool[,] ownerless_squares = new bool[9, 16];
+     static bool[,] player_ownership = new bool[9, 16];
+     static bool[,] computer_ownership = new bool[9, 16];
+     static bool[,] lines = new bool[19, 33]; //   (even, even) points are constant
           //                                      and always "false" (they refer to "+")
 
           //                                      (odd, odd) points refer to squareable areas
           //                                      and "true" iff there is a square (P, C, or ownerless (:))
+     static void Main()
+     {
+          Console.Clear();
+          
 
-          bool[,] ownerless_squares = new bool[9, 16];
-          bool[,] player_ownership = new bool[9, 16];
-          bool[,] computer_ownership = new bool[9, 16];
+          
 
 
           for (int i = 0; i < 33; i++) //Setting up the upper and the bottom-outer-border-lines
@@ -28,24 +30,20 @@ class Squares
 
           }
           lines = RandomizeInitialBoard(lines); // Initializes the board
-          LinePrint(lines); // Prints all the lines including the inner lines
-          OwnershipTag(ownerless_squares, lines, player_ownership, computer_ownership);
+          
+          OwnershipTag(ref ownerless_squares, lines, player_ownership, computer_ownership);
           // Since the random-formed-squares are ownerless, we signed them so 
 
-          PrintOwnership(0, ownerless_squares); // Prints (:) since Mode == 0 and 
-                                                // PrintModeArray == ownerless_squares
-          int m = Convert.ToInt16(Console.ReadLine());
-                    int n = Convert.ToInt16(Console.ReadLine());
-          lines = Stage2ExtraLine(lines, m , n);
-          OwnershipTag(player_ownership, lines, ownerless_squares, computer_ownership);
-          Console.Clear();
-LinePrint(lines); // Prints all the lines including the inner lines
-PrintOwnership(1, player_ownership);
-PrintOwnership(0, ownerless_squares);
-          
+         PrintAll();
 
 
+         
+          int m = Convert.ToInt16(Console.ReadLine()); //idareten yazılmış birkaç satır,
+           int n = Convert.ToInt16(Console.ReadLine()); // (m, n) noktasına çizgi çeker
 
+          lines = Stage2ExtraLine(lines, m, n);
+          PrintAll();
+         
 
 
 
@@ -103,7 +101,7 @@ PrintOwnership(0, ownerless_squares);
           return lines_array;
      }
 
-     static void OwnershipTag(bool[,] whose_ownership, bool[,] lines_array, bool[,] check_array, bool[,] check_array2)
+     static void OwnershipTag(ref bool[,] whose_ownership, bool[,] lines_array, bool[,] check_array, bool[,] check_array2)
      {
           //       To check if the move has formed a square, write their array
           //        instead of "whose_ownership"
@@ -192,12 +190,28 @@ PrintOwnership(0, ownerless_squares);
      }
 
 
-     static bool[,] Stage2ExtraLine(bool[,] lines_array, int i, int j) // biri çift biri tek olcak
-
+     static bool[,] Stage2ExtraLine(bool[,] lines_array, int row, int column) // biri çift biri tek olcak
+                    // OYUNCUDAN (row, column) INPUTU ALMA
+                    // KODUNU YAZARKEN, HALİHAZIRDA ÇİZGİ OLMAYAN BİR YER SEÇTİĞİNDEN
+                    // EMİN OLMAK GEREKİYOR, BU FONKSİYON ONU SAĞLAMIYOR!!!
      {
           bool[,] new_lines_array = lines_array;
-          new_lines_array[i, j] = true;
+          new_lines_array[row, column] = true;
+          OwnershipTag(ref ownerless_squares, lines_array, player_ownership, computer_ownership);
           return new_lines_array;
+     }
+
+     static void PrintAll() // önce çizgileri, sonra tek tek sahiplikleri basatırmak yerine
+     //                        hepsini tek hamlede PrintAll() ile yazdırabiliriz
+     //                        AMA ÖNCESİNDE OwnershipTag FONKSİYONU İLE (VARSA) YENİ KARELERİ
+     //                                                                         SAHİPLENDİRMELİYİZ 
+     {
+          Console.Clear();
+          Console.SetCursorPosition(0,0);
+          LinePrint(lines);
+          PrintOwnership(0, ownerless_squares);
+          PrintOwnership(1, player_ownership);
+          PrintOwnership(2, computer_ownership);
      }
 
 
