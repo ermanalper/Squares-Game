@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 class Squares
 {
      static Random random = new Random();
@@ -6,16 +7,16 @@ class Squares
      static bool[,] player_ownership = new bool[9, 16];
      static bool[,] computer_ownership = new bool[9, 16];
      static bool[,] lines = new bool[19, 33]; //   (even, even) points are constant
-          //                                      and always "false" (they refer to "+")
+                                              //                                      and always "false" (they refer to "+")
 
-          //                                      (odd, odd) points refer to squareable areas
-          //                                      and "true" iff there is a square (P, C, or ownerless (:))
+     //                                      (odd, odd) points refer to squareable areas
+     //                                      and "true" iff there is a square (P, C, or ownerless (:))
      static void Main()
      {
           Console.Clear();
-          
 
-          
+
+
 
 
           for (int i = 0; i < 33; i++) //Setting up the upper and the bottom-outer-border-lines
@@ -30,20 +31,20 @@ class Squares
 
           }
           lines = RandomizeInitialBoard(lines); // Initializes the board
-          
+
           OwnershipTag(ref ownerless_squares, lines, player_ownership, computer_ownership);
           // Since the random-formed-squares are ownerless, we signed them so 
 
-         PrintAll();
-
-
-         
-          int m = Convert.ToInt16(Console.ReadLine()); //idareten yazılmış birkaç satır,
-           int n = Convert.ToInt16(Console.ReadLine()); // (m, n) noktasına çizgi çeker
-
-          lines = Stage2ExtraLine(lines, m, n);
           PrintAll();
-         
+
+          AddNewLineWithCursor(ref lines);
+          OwnershipTag(ref player_ownership, lines, ownerless_squares, computer_ownership);
+          PrintAll();
+
+
+          Console.ReadLine();
+
+
 
 
 
@@ -189,34 +190,148 @@ class Squares
 
      }
 
+     static void PrintAll() // Instead of printing the ownership tags
+     //                       one by one after printing the board,
+     //                       just use PrintAll()
 
-     static bool[,] Stage2ExtraLine(bool[,] lines_array, int row, int column) // biri çift biri tek olcak
-                    // OYUNCUDAN (row, column) INPUTU ALMA
-                    // KODUNU YAZARKEN, HALİHAZIRDA ÇİZGİ OLMAYAN BİR YER SEÇTİĞİNDEN
-                    // EMİN OLMAK GEREKİYOR, BU FONKSİYON ONU SAĞLAMIYOR!!!
-     {
-          bool[,] new_lines_array = lines_array;
-          new_lines_array[row, column] = true;
-          OwnershipTag(ref ownerless_squares, lines_array, player_ownership, computer_ownership);
-          return new_lines_array;
-     }
+     //                       WARNING!! : YOU STILL NEED TO MARK THE SQUARES
+     //                                   WITH THE OwnershipTag FUNCTION BEFORE
+     //                                   USING THIS FUNCTIONS
 
-     static void PrintAll() // önce çizgileri, sonra tek tek sahiplikleri basatırmak yerine
-     //                        hepsini tek hamlede PrintAll() ile yazdırabiliriz
-     //                        AMA ÖNCESİNDE OwnershipTag FONKSİYONU İLE (VARSA) YENİ KARELERİ
-     //                                                                         SAHİPLENDİRMELİYİZ 
      {
           Console.Clear();
-          Console.SetCursorPosition(0,0);
+          Console.SetCursorPosition(0, 0);
           LinePrint(lines);
           PrintOwnership(0, ownerless_squares);
           PrintOwnership(1, player_ownership);
           PrintOwnership(2, computer_ownership);
      }
 
+     static void AddNewLineWithCursor(ref bool[,] lines_array) // Adds a new line wherever the
+               //                                                 the player chooses
+
+               //                                                 Use arrows to move
+
+               //               WARNING!: This DOES NOT print the board. Use PrintAll(),
+               //                         hence OwnershipTag (because you muse use OwnershipTag 
+               //                         before using PrintAll), to print the board
+                                   //     
+     {
+
+          ConsoleKeyInfo cki;
+          Console.SetCursorPosition(2, 1);
+          int cursor_x = 2, cursor_y = 1;
+          Console.Write("|");
+          bool inserted = false;
+          do
+          {
+               bool loop = true;
+
+               bool boarder = false;
+
+               while (loop)
+               {
+
+
+                    if (Console.KeyAvailable)
+                    {
+                         int x_save = cursor_x, y_save = cursor_y;
+
+                         cki = Console.ReadKey(true);
+
+                         switch (cki.Key)
+                         {
+                              case ConsoleKey.Spacebar:
+                                   loop = false;
+                                   break;
+                              case ConsoleKey.RightArrow:
+                                   if (cursor_x < 30) cursor_x += 2;
+                                   else if (cursor_x == 30 && cursor_y <= 15)
+                                   {
+                                        cursor_x++;
+                                        cursor_y++;
+                                   }
+                                   else if (cursor_x == 30 && cursor_y == 17)
+                                   {
+                                        cursor_x++;
+                                        cursor_y--;
+                                   }
+                                   break;
+                              case ConsoleKey.LeftArrow:
+                                   if (cursor_x > 2) cursor_x -= 2;
+                                   else if (cursor_x == 2 && cursor_y <= 15)
+                                   {
+                                        cursor_x--;
+                                        cursor_y++;
+                                   }
+                                   else if (cursor_x == 2 && cursor_y == 17)
+                                   {
+                                        cursor_x--;
+                                        cursor_y--;
+                                   }
+                                   break;
+                              case ConsoleKey.UpArrow:
+                                   if (cursor_y >= 2 && cursor_x < 31)
+                                   {
+                                        cursor_y--;
+                                        if (cursor_x % 2 == 1 || boarder)
+                                        {
+                                             cursor_x++;
+                                             boarder = false;
+                                        }
+                                        else cursor_x--;
+                                   }
+                                   else if (cursor_y >= 2 && cursor_x == 31)
+                                   {
+                                        cursor_y--;
+                                        cursor_x--;
+                                        boarder = true;
+                                   }
+                                   break;
+                              case ConsoleKey.DownArrow:
+                                   if (cursor_y <= 16 && cursor_x < 31)
+                                   {
+                                        cursor_y++;
+                                        if (cursor_x % 2 == 1 || boarder)
+                                        {
+                                             boarder = false;
+                                             cursor_x++;
+                                        }
+                                        else cursor_x--;
+                                   }
+                                   else if (cursor_y <= 16 && cursor_x == 31)
+                                   {
+                                        cursor_y++;
+                                        cursor_x--;
+                                        boarder = true;
+                                   }
+                                   break;
+
+                         }
+                         if (lines_array[y_save, x_save] == false)
+                         {
+                              Console.SetCursorPosition(x_save, y_save);
+                              Console.Write(" ");
+                         }
+                         Console.SetCursorPosition(cursor_x, cursor_y);
+                         if (cursor_x % 2 == 0) Console.Write("|");
+                         else Console.Write("-");
+                    }
+
+               }
+               if (lines_array[cursor_y, cursor_x] == false)
+               {
+                    inserted = true;
+                    lines_array[cursor_y, cursor_x] = true;
+               }
+          } while (!inserted);
+
+
+     }
 
 
 
 
-     
+
+
 }
