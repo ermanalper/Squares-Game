@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 class Squares
 {
      static Random random = new Random();
+     static int playerScore;
      static bool[,] ownerless_squares = new bool[9, 16];
      static bool[,] player_ownership = new bool[9, 16];
      static bool[,] computer_ownership = new bool[9, 16];
@@ -37,10 +38,10 @@ class Squares
 
           PrintAll();
 
-          AddNewLineWithCursor(ref lines);
+          //AddNewLineWithCursor(ref lines);
           OwnershipTag(ref player_ownership, lines, ownerless_squares, computer_ownership);
           PrintAll();
-
+          playerScore = Stage1(lines, ref player_ownership, ref ownerless_squares, playerScore);
 
           Console.ReadLine();
 
@@ -74,7 +75,7 @@ class Squares
      }
 
      static bool[,] RandomizeInitialBoard(bool[,] lines_array) // This function switches random 90 bools to "true"
-     //                                                         in order to randomize the initial board
+                                                               //                                                         in order to randomize the initial board
      {
           for (int i = 1; i <= 90; i++)
           {
@@ -93,10 +94,10 @@ class Squares
                          column = random.Next(33);
                     } while (column % 2 == 1);
                } // Now it is obvious that we have selected an (odd, even) or an (even, odd) point
-               //   (All lines (| or -) must be on these points)
+                 //   (All lines (| or -) must be on these points)
                if (lines_array[row, column]) i--; // Iff there is already a line at that point,
-               //                              (so lines_array[row, column] == true)
-               //                              DO NOT count that cycle
+                                                  //                              (so lines_array[row, column] == true)
+                                                  //                              DO NOT count that cycle
                else lines_array[row, column] = true; // Creates a line (| or -) at that point
           }
           return lines_array;
@@ -191,8 +192,8 @@ class Squares
      }
 
      static void PrintAll() // Instead of printing the ownership tags
-     //                       one by one after printing the board,
-     //                       just use PrintAll()
+                            //                       one by one after printing the board,
+                            //                       just use PrintAll()
 
      //                       WARNING!! : YOU STILL NEED TO MARK THE SQUARES
      //                                   WITH THE OwnershipTag FUNCTION BEFORE
@@ -208,14 +209,14 @@ class Squares
      }
 
      static void AddNewLineWithCursor(ref bool[,] lines_array) // Adds a new line wherever the
-               //                                                 the player chooses
+                                                               //                                                 the player chooses
 
-               //                                                 Use arrows to move
+     //                                                 Use arrows to move
 
-               //               WARNING!: This DOES NOT print the board. Use PrintAll(),
-               //                         hence OwnershipTag (because you muse use OwnershipTag 
-               //                         before using PrintAll), to print the board
-                                   //     
+     //               WARNING!: This DOES NOT print the board. Use PrintAll(),
+     //                         hence OwnershipTag (because you muse use OwnershipTag 
+     //                         before using PrintAll), to print the board
+     //     
      {
 
           ConsoleKeyInfo cki;
@@ -330,7 +331,84 @@ class Squares
      }
 
 
+     static int Stage1(bool[,] lines, ref bool[,] player_ownership, ref bool[,] ownerless_squares, int currentScore)
+     {
+          Console.WriteLine("Stage 1: Squaring - Begin!");
 
+          int lastSquareRow = -1, lastSquareCol = -1;
+          bool continueSquaring = true;
+          while (continueSquaring)
+          {
+               // add a new line
+               AddNewLineWithCursor(ref lines);
+               PrintAll();
+               bool squareFormed = false;
+
+               // check all the squares on the board
+               for (int row = 1; row <= 17; row += 2)
+               {
+                    for (int col = 0; col <= 30; col += 2)
+                    {
+                         // check if the new line forms a square
+                         if (lines[row, col] && lines[row, col + 2] &&
+                             lines[row - 1, col + 1] && lines[row + 1, col + 1])
+                         {
+                              int squareRow = (row - 1) / 2;
+                              int squareCol = col / 2;
+
+                              // if it is already a square continue 
+                              if (player_ownership[squareRow, squareCol] || ownerless_squares[squareRow, squareCol])
+                                   continue;
+
+                              // first square
+                              if (lastSquareRow == -1)
+                              {
+                                   Console.WriteLine($"First square formed at ({squareRow}, {squareCol})!");
+                                   player_ownership[squareRow, squareCol] = true;
+                                   lastSquareRow = squareRow;
+                                   lastSquareCol = squareCol;
+                                   squareFormed = true;
+                              }
+                              else
+                              {
+                                   // checking neighbor (only for the last square will be improved)
+                                   bool isNeighbor = false;
+
+                                   if ((squareRow == lastSquareRow && Math.Abs(squareCol - lastSquareCol) == 1) || // right - left
+                                       (squareCol == lastSquareCol && Math.Abs(squareRow - lastSquareRow) == 1))   // up - down
+                                   {
+                                        isNeighbor = true;
+                                   }
+
+                                   if (isNeighbor)
+                                   {
+                                        Console.WriteLine($"Square formed at ({squareRow}, {squareCol})!");
+                                        player_ownership[squareRow, squareCol] = true;
+                                        lastSquareRow = squareRow;
+                                        lastSquareCol = squareCol;
+                                        squareFormed = true;
+                                   }
+                                   else
+                                   {
+                                        // if the new square is not neighbour 
+                                        ownerless_squares[squareRow, squareCol] = true;
+                                        currentScore -= 5;
+                                        Console.WriteLine($"Irregular square at ({squareRow}, {squareCol})! -5 points.");
+                                   }
+                              }
+                         }
+                    }
+               }
+
+               if (!squareFormed)
+               {
+                    Console.WriteLine("No more squares can be formed. Stage 1 ends.");
+                    continueSquaring = false;
+               }
+          }
+
+          return currentScore;
+     }
 
 
 
