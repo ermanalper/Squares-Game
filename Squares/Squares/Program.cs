@@ -3,8 +3,10 @@ using System.Runtime.InteropServices;
 class Squares
 {
     static Random random = new Random();
+    static int round = 1;
     static int cursor_x = 2, cursor_y = 1;
     static int playerScore;
+    static int computerScore;
     static bool[,] ownerless_squares = new bool[9, 16];
     static bool[,] player_ownership = new bool[9, 16];
     static bool[,] computer_ownership = new bool[9, 16];
@@ -170,6 +172,29 @@ class Squares
         PrintOwnership(0, ownerless_squares);
         PrintOwnership(1, player_ownership);
         PrintOwnership(2, computer_ownership);
+        Console.SetCursorPosition(34, 0);
+        Console.Write($"Round: {round} ");
+        Console.SetCursorPosition(34, 4);
+        Console.Write($"Your score: {playerScore}");
+        Console.SetCursorPosition(34, 5);
+        Console.Write($"Computer score: {computerScore}");
+        Console.SetCursorPosition(0, 19);
+
+        int pCount = 0;
+        foreach (bool s in player_ownership) if (s == true) pCount++;
+        Console.SetCursorPosition(34, 7);
+        Console.Write($"Your squares: {pCount}");
+        Console.SetCursorPosition(34, 8);
+        int cCount = 0;
+        foreach (bool s in computer_ownership) if (s == true) cCount++;
+        
+        Console.Write($"Computer squares: {cCount}");
+        Console.SetCursorPosition(34, 9);
+        int oCount = 0;
+        foreach (bool s in ownerless_squares) if (s == true) oCount++;
+       
+        Console.Write($"Ownerless squares: {oCount}");
+
         Console.SetCursorPosition(0, 19);
     }
 
@@ -297,7 +322,7 @@ class Squares
     }
 
 
-    static int Stage1(bool[,] lines, ref bool[,] player_ownership, ref bool[,] ownerless_squares, int currentScore)
+    static void Stage1(bool[,] lines, ref bool[,] player_ownership, ref bool[,] ownerless_squares)
     {
         PrintAll();
         Console.WriteLine("Stage 1: Squaring - Begin!");
@@ -305,15 +330,24 @@ class Squares
         bool continueSquaring = true;
         int irrRow = 0; //unassigned
         int irrCol = 0; //unassigned
-        
+        bool first = false;
+        int dispRow = 0; //unassigned
+        int dispCol = 0; //unassigned
         while (continueSquaring)
         {
+            Console.SetCursorPosition(34, 1);
+            Console.Write("Your Turn");
+            Console.SetCursorPosition(34, 2);
+            Console.Write("Stage 1");
+
             // add a new line
             AddNewLineWithCursor(ref lines);
             bool squareFormed = false;
             int squareRow = 0; //unassigned
             int squareCol = 0;  //unassigned
             bool irregularFormed = false;
+            bool isNeighbor = false;
+            
 
             // check all the squares on the board
             for (int row = 1; row <= 17; row += 2)
@@ -330,13 +364,16 @@ class Squares
                         // if it is already a square continue 
                         if (player_ownership[squareRow, squareCol] || ownerless_squares[squareRow, squareCol])
                             continue;
+                        
+                        dispRow = squareRow;
+                        dispCol = squareCol;
 
                         // first square
                         if (lastSquareRow == -1)
                         {
                             player_ownership[squareRow, squareCol] = true;
-                            PrintAll();
-                            Console.WriteLine($"First square formed at ({squareRow}, {squareCol})!");
+                            
+                            first = true;
 
                             lastSquareRow = squareRow;
                             lastSquareCol = squareCol;
@@ -345,7 +382,7 @@ class Squares
                         else
                         {
                             // checking neighbor (prev square)
-                            bool isNeighbor = false;
+                            isNeighbor = false;
 
                             if ((squareRow == lastSquareRow && Math.Abs(squareCol - lastSquareCol) == 1) || // right - left
                                 (squareCol == lastSquareCol && Math.Abs(squareRow - lastSquareRow) == 1))   // up - down
@@ -357,8 +394,8 @@ class Squares
                             {
                                 player_ownership[squareRow, squareCol] = true;
 
-                                PrintAll();
-                                Console.WriteLine($"Square formed at ({squareRow}, {squareCol})!");
+                                
+                                
                                 lastSquareRow = squareRow;
                                 lastSquareCol = squareCol;
                                 squareFormed = true;
@@ -368,8 +405,8 @@ class Squares
                                 // if the new square is not neighbour 
 
                                 ownerless_squares[squareRow, squareCol] = true;
-                                PrintAll();
-                                currentScore -= 5;
+                                
+                                playerScore -= 5;
                                 irregularFormed = true;
                                 irrRow = squareRow;
                                 irrCol = squareCol;
@@ -382,16 +419,30 @@ class Squares
             if (!squareFormed)
             {
                 Console.SetCursorPosition(0, 19);
-                Console.WriteLine("No more squares can be formed. Stage 1 ends.");
+                
                 continueSquaring = false;
-                if (irregularFormed)
-                    Console.WriteLine($"Irregular square at ({irrRow}, {irrCol})! -5 points.");
+                
+                
             }
+            else playerScore++;
+            PrintAll();
+            if (first) 
+            {
+                Console.WriteLine($"First square formed at ({dispRow}, {dispCol})!");
+                first = false;
+            }
+            else if(isNeighbor) Console.WriteLine($"Square formed at ({dispRow}, {dispCol})!");
+            if(!squareFormed)
+            {
+                Console.WriteLine("No more squares can be formed. Stage 1 ends.");
+                if (irregularFormed)Console.WriteLine($"Irregular square at ({dispRow}, {dispCol})! -5 points.");
+            }
+
         }
         cursor_x = 2;
         cursor_y = 1;
 
-        return currentScore;
+        
     }
 
     static void Main()
@@ -423,7 +474,7 @@ class Squares
         //AddNewLineWithCursor(ref lines);
         OwnershipTag(ref player_ownership, lines, ownerless_squares, computer_ownership);
         PrintAll();
-        playerScore = Stage1(lines, ref player_ownership, ref ownerless_squares, playerScore);
+        Stage1(lines, ref player_ownership, ref ownerless_squares);
 
         Console.ReadLine();
 
