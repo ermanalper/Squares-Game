@@ -15,6 +15,8 @@ class Squares
 
     //                                      (odd, odd) points refer to squareable areas
     //                                      and "true" iff there is a square (P, C, or ownerless (:))
+   // static bool[,] rndcizgi = new bool[5, 5]; 
+   // static int[,] connectedlik = new int[5, 5];
 
 
     static void LinePrint(bool[,] lines_array) //      This function prints the current state of the board
@@ -68,8 +70,134 @@ class Squares
         }
         return lines_array;
     }
+    /*static void besebestabloyazdırma()
+    {
+        Console.Clear();
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                Console.SetCursorPosition(j, i);
+                if (i % 2 == 0 && j % 2 == 0) { Console.Write("+"); }
+                else if (i % 2 == 1 && j % 2 == 1) { Console.Write(" "); }
+                else if (rndcizgi[i, j])
+                {
+                    if (i % 2 == 0 && j % 2 != 0)
+                    { Console.Write("-"); }
+                    else if (i % 2 != 0 && j % 2 == 0)
+                    {
+                        Console.Write("|");
+                    }
+                }
+            }
+        }
+        Console.ReadLine();
+    }
+    
+    static void Dicretestage3()
+    {
+        Random rnd = new Random();// burda gerekli değişkenleri atadım.
+                                  // bağlantılı olup olmadığını göstericek 1.adımda 4 se/ 2 de 3/ 3te 2 taneyse bağlantılı demektir.
+        int countstage3 = 0; // 3 bağlantılı şekilden 1 bağlantılı şekle kadarki stage aşamaları
+        int rndcizgix = 0; // dizinin x bileşeni
+        int rndcizgiy = 0;// dizinin y bileşeni 
 
-    static void OwnershipTag(ref bool[,] whose_ownership, bool[,] lines_array, bool[,] check_array, bool[,] check_array2)
+
+
+        while (countstage3 < 3)
+        {
+            int count = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    rndcizgi[i, j] = false;
+                }
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    connectedlik[i, j] = 0;
+                }
+            }
+            for (int i = 0; i < 3 - countstage3; i++) // bu kenarlara + koyma işlemini adımlara göre 3 2 veya 1 defa yapıyorum.
+            {
+                do
+                {
+                    rndcizgix = rnd.Next(0, 5);
+                    rndcizgiy = rnd.Next(0, 5);
+                } while ((rndcizgix % 2 == rndcizgiy % 2) || rndcizgi[rndcizgix, rndcizgiy] == true); // x ve y aynı anda tek ya da çift olmayana kadar dönmeli. 2 si de tek olursa boşluk kısımlar ikisi de çift olursa + ların geleceği kısım olmuş oluyor.
+                if (rndcizgix % 2 == 0 && rndcizgiy % 2 != 0)
+                {
+                    rndcizgi[rndcizgix, rndcizgiy] = true; // x çift y tek olursa yatay kısımlardan biri olmuş olur soluna ve sağına + diyip o kısma true koyuyorum.
+                    connectedlik[rndcizgix, rndcizgiy - 1] = 1;
+                    connectedlik[rndcizgix, rndcizgiy + 1] = 1;
+
+                }
+                else if (rndcizgix % 2 != 0 && rndcizgiy % 2 == 0)// x tek y çift olursa dikey kısımlardan biri olmuş olur yukarısına ve aşağısına + diyip o kısma true atıyorum.
+                {
+                    rndcizgi[rndcizgix, rndcizgiy] = true;
+                    connectedlik[rndcizgix - 1, rndcizgiy] = 1;
+                    connectedlik[rndcizgix + 1, rndcizgiy] = 1;
+                }
+            }
+
+            for (int i = 0; i < rndcizgi.GetLength(0); i += 2) //connectedlıa atadığım + değerlerini sayıyorum
+            {
+                for (int j = 0; j < rndcizgi.GetLength(1); j += 2)
+                {
+                    if (connectedlik[i, j] == 1) { count++; }
+                }
+            }
+            if (countstage3 == 0 && count == 4 || countstage3 == 1 && count == 3 || countstage3 == 2 && count == 2)
+            {
+
+
+                besebestabloyazdırma();
+                Console.Clear();
+                while (!(connectedlik[0, 0] == 1 || connectedlik[0, 2] == 1 || connectedlik[0, 4] == 1))//yukarı shitlemek için
+                {
+                    for (int i = 0; i < rndcizgi.GetLength(0) - 1; i += 2)
+                    {
+                        connectedlik[0, i] = connectedlik[2, i];
+                        connectedlik[2, i] = connectedlik[4, i];
+                        //connectedlik[4, i] = 0;
+                        rndcizgi[1, i] = rndcizgi[3, i];
+                        rndcizgi[3, i] = false;
+                        rndcizgi[0, i + 1] = rndcizgi[2, i + 1];
+                        rndcizgi[2, i + 1] = rndcizgi[4, i + 1];
+                        rndcizgi[4, i + 1] = false;
+                    }
+
+                }
+                while (!(connectedlik[0, 0] == 1 || connectedlik[2, 0] == 1 || connectedlik[4, 0] == 1))//sola shiftlemek için
+                {
+                    for (int i = 0; i < rndcizgi.GetLength(0) - 1; i += 2)
+                    {
+                        connectedlik[i, 0] = connectedlik[i, 2];
+                        connectedlik[i, 2] = connectedlik[i, 4];
+                        //connectedlik[i,4] = 0;
+                        rndcizgi[i, 1] = rndcizgi[i, 3];
+                        rndcizgi[1, i] = rndcizgi[3, i];
+                        rndcizgi[i, 3] = false;
+                        rndcizgi[i + 1, 0] = rndcizgi[i + 1, 2];
+                        rndcizgi[i + 1, 2] = rndcizgi[i + 1, 4];
+                        rndcizgi[i + 1, 4] = false;
+                    }
+
+                }
+
+
+                besebestabloyazdırma();
+                Console.ReadLine();
+
+                countstage3++;
+            }
+
+
+        }*/
+        static void OwnershipTag(ref bool[,] whose_ownership, bool[,] lines_array, bool[,] check_array, bool[,] check_array2)
     {
         //       To check if the move has formed a square, write their array
         //        instead of "whose_ownership"
