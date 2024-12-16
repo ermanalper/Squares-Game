@@ -1,10 +1,10 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\Squares-Game\\Squares\\Squares\\",
+  "WorkspaceRootPath": "C:\\Users\\sengu\\Desktop\\Squares-Game\\Squares\\Squares\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Lenovo\\OneDrive\\Desktop\\Squares-Game\\Squares\\Squares\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B2173711-7D54-439E-8D14-6A045461341F}|Squares.csproj|c:\\users\\sengu\\desktop\\squares-game\\squares\\squares\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2173711-7D54-439E-8D14-6A045461341F}|Squares.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -20,11 +20,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\Squares-Game\\Squares\\Squares\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\sengu\\Desktop\\Squares-Game\\Squares\\Squares\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\Squares-Game\\Squares\\Squares\\Program.cs",
+              "ToolTip": "C:\\Users\\sengu\\Desktop\\Squares-Game\\Squares\\Squares\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAK4BAAAAAAAAAAAYwMIBAAATAAAAAAAAAA==",
+              "ViewState": "AgIAAKkAAAAAAAAAAAAAALkAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-11T10:18:45.514Z",
               "EditorCaption": ""

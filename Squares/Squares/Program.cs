@@ -15,8 +15,8 @@ class Squares
 
     //                                      (odd, odd) points refer to squareable areas
     //                                      and "true" iff there is a square (P, C, or ownerless (:))
-   // static bool[,] rndcizgi = new bool[5, 5]; 
-   // static int[,] connectedlik = new int[5, 5];
+  static bool[,] rndcizgi = new bool[5, 5]; 
+   static int[,] connectedlik = new int[5, 5];
 
 
     static void LinePrint(bool[,] lines_array) //      This function prints the current state of the board
@@ -70,7 +70,7 @@ class Squares
         }
         return lines_array;
     }
-    /*static void besebestabloyazdırma()
+    static void besebestabloyazdırma()
     {
         Console.Clear();
         for (int i = 0; i < 5; i++)
@@ -93,7 +93,7 @@ class Squares
         }
         Console.ReadLine();
     }
-    
+
     static void Dicretestage3()
     {
         Random rnd = new Random();// burda gerekli değişkenleri atadım.
@@ -158,32 +158,38 @@ class Squares
                 Console.Clear();
                 while (!(connectedlik[0, 0] == 1 || connectedlik[0, 2] == 1 || connectedlik[0, 4] == 1))//yukarı shitlemek için
                 {
-                    for (int i = 0; i < rndcizgi.GetLength(0) - 1; i += 2)
+                    for (int i = 0; i <= rndcizgi.GetLength(0) - 1; i += 2)
                     {
                         connectedlik[0, i] = connectedlik[2, i];
                         connectedlik[2, i] = connectedlik[4, i];
-                        //connectedlik[4, i] = 0;
+                        connectedlik[4, i] = 0;
                         rndcizgi[1, i] = rndcizgi[3, i];
                         rndcizgi[3, i] = false;
-                        rndcizgi[0, i + 1] = rndcizgi[2, i + 1];
-                        rndcizgi[2, i + 1] = rndcizgi[4, i + 1];
-                        rndcizgi[4, i + 1] = false;
+                        if (i < 4)
+                        {
+
+                            rndcizgi[0, i + 1] = rndcizgi[2, i + 1];
+                            rndcizgi[2, i + 1] = rndcizgi[4, i + 1];
+                            rndcizgi[4, i + 1] = false;
+                        }
                     }
 
                 }
                 while (!(connectedlik[0, 0] == 1 || connectedlik[2, 0] == 1 || connectedlik[4, 0] == 1))//sola shiftlemek için
                 {
-                    for (int i = 0; i < rndcizgi.GetLength(0) - 1; i += 2)
+                    for (int i = 0; i <= rndcizgi.GetLength(0) - 1; i += 2)
                     {
                         connectedlik[i, 0] = connectedlik[i, 2];
                         connectedlik[i, 2] = connectedlik[i, 4];
-                        //connectedlik[i,4] = 0;
+                        connectedlik[i, 4] = 0;
                         rndcizgi[i, 1] = rndcizgi[i, 3];
-                        rndcizgi[1, i] = rndcizgi[3, i];
                         rndcizgi[i, 3] = false;
-                        rndcizgi[i + 1, 0] = rndcizgi[i + 1, 2];
-                        rndcizgi[i + 1, 2] = rndcizgi[i + 1, 4];
-                        rndcizgi[i + 1, 4] = false;
+                        if (i < 4)
+                        {
+                            rndcizgi[i + 1, 0] = rndcizgi[i + 1, 2];
+                            rndcizgi[i + 1, 2] = rndcizgi[i + 1, 4];
+                            rndcizgi[i + 1, 4] = false;
+                        }
                     }
 
                 }
@@ -196,7 +202,8 @@ class Squares
             }
 
 
-        }*/
+        }
+    }
         static void OwnershipTag(ref bool[,] whose_ownership, bool[,] lines_array, bool[,] check_array, bool[,] check_array2)
     {
         //       To check if the move has formed a square, write their array

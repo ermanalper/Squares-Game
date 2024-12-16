@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Squares")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b30f1ffb8dc4c8fb34f59848ad0ee2bb3092096b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+76c304b7d51baeff919208de7cb71e12ea75bf38")]
 [assembly: System.Reflection.AssemblyProductAttribute("Squares")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Squares")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
