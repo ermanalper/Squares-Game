@@ -580,6 +580,122 @@ class Squares
         
     }
 
+
+
+
+    static bool IsTheAreaSquareable(int i, int j) // is the area squareable just by adding 1 new line
+    {                               // !! PARAMETERS ARE i, j OF OWNERSHIP ARRAYS (not lines array)
+                                    // ownership arrays are [9, 16], where the lines array is [19, 33].
+                                    // the function returns true or false by calcculating the corresponding i, j
+                                    // point in the lines array
+        byte counter = 0;
+        if(lines[(2*i) + 1, 2 * j]) counter++;
+        if (lines[2*i, (2*j) + 1]) counter++;
+        if(lines[(2*i) + 1, (2 * j) + 2]) counter++;
+        if(lines[(2*i) + 2, (2*j) + 1]) counter++;
+        
+        return counter == 3;
+    }
+    
+    static void SquareTheArea(ref bool[,] imaginaryLines, int i, int j)// this makes a square in the selected area
+    {
+        imaginaryLines[(2*i) + 1, 2 * j] = true;
+        imaginaryLines[2*i, (2*j) + 1] = true;
+        imaginaryLines[(2*i) + 1, (2 * j) + 2] = true;
+        imaginaryLines[(2*i) + 2, (2*j) + 1] = true;
+    }
+
+
+    
+    static void ComputerAIStage1(int difficulty) // difficulty is either 5 or 50 or 500 
+    {
+
+        int highestSquareCountReached = 0;
+
+        byte[] theBestDirections = new byte[143]; // a total of 144 boards on the board, so max 143 directions
+                                    // can be choosen at a time. (it will probably never happen...) 
+        byte[] theBestStartingPoint = new byte[2];
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 16; j++)
+            {
+                if (ownerless_squares[i, j] || player_ownership[i, j] || computer_ownership[i, j]) continue;
+                // skip to the next AREA if the current one is already a square
+                
+                if (IsTheAreaSquareable(i, j)) // now we found a starting point that can be turned into a square
+                {
+                    
+                    int x = i, y = j;
+                    for (int tries = 0; tries < difficulty; tries++)
+                    {
+                        bool[,] imaginaryLines = (bool[,])lines.Clone();
+                        bool keepSquaring = true;
+                        SquareTheArea(ref imaginaryLines, i , j);
+                        int newSquares = 1;
+
+                        byte[]currentDirections = new byte[143];
+                        int directionIndex = 0;
+                        byte direction;
+
+                        while(keepSquaring)
+                        {
+                            int currX = x, currY = y;
+                            do{
+                                x = currX;
+                                y = currY;
+                                direction = (byte)random.Next(1, 5); // 1: UP, 2: RIGHT, 3: DOWN, 4: LEFT
+                                                                    // (0 is used in the array where we hold the directions
+                                                                    // so it would be a problem if 0 sampled a direction)
+                                switch (direction)
+                                {
+                                    case 1: // UP
+                                        x--;
+                                        break;
+                                    case 2: // RIGHT
+                                        y++;
+                                        break;
+                                    case 3: // DOWN
+                                        x++;
+                                        break;
+                                    case 4: //LEFT
+                                        y--;
+                                        break;
+                                }
+                            }while(x >= 0 && y >= 0 && x < 9 && y < 16); // now the ai has chosen a valid direction
+                            // (x, y) is the neighbor area that it will try to square next
+                            if(!IsTheAreaSquareable(x, y)) keepSquaring = false;
+                            else
+                            {
+                                SquareTheArea(ref imaginaryLines, x, y);
+                                newSquares++;
+                                currentDirections[directionIndex] = direction;
+                                directionIndex++;
+                            }
+                        }
+                        if(newSquares > highestSquareCountReached) // setting the new high
+                        {
+                            highestSquareCountReached = newSquares;
+                            for (int b = 0; b < theBestDirections.Length; b++) b = 0; // reset the directions array
+                            int insertIndex = 0;
+                            int nextIndex = 1;
+                            do{
+                                theBestDirections[insertIndex] = currentDirections[insertIndex];
+                                insertIndex++;
+                                nextIndex++;
+                            }while(nextIndex != 0 && insertIndex < 143); //stored the best directions
+                            // Format: 4, 2, 1, 4, 3, 0, 0, 0, 0, 0, 0, .....0    :: total 143 numbers
+                            theBestStartingPoint[0] = (byte)i;
+                            theBestStartingPoint[1] = (byte)j;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+    // now we have the best starting point -> theBestStartingPoint
+    //            and the best directions  -> theBestDirections
+
     static void Main()
     {
         Console.Clear();
