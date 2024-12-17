@@ -696,6 +696,133 @@ class Squares
     // now we have the best starting point -> theBestStartingPoint
     //            and the best directions  -> theBestDirections
 
+
+    public static char[,] Stage3(int numberOfLines)
+    {
+        char[,] lines = new char[5, 5];
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 5; j++)            // We create an empty 5 by 5 table.
+            {
+                if (i % 2 == 0 && j % 2 == 0)
+                {
+                    lines[i, j] = '+';
+                }
+                else lines[i, j] = ' ';
+            }
+        }
+        Random rnd = new Random();
+        int x = rnd.Next(3) * 2;                   //We choose one of 9 random points in a 5 by 5 table and choose a point to start drawing a line.
+        int y = rnd.Next(3) * 2;
+        int counter = 0;
+        bool isItVertical = false;
+        bool isItFarLeft = false;
+        bool isItUpper = false;
+        int num;
+        while (counter < numberOfLines)
+        {
+            isItVertical = Convert.ToBoolean(rnd.Next(2));       // We check whether the line to be drawn from the selected point is vertical or horizontal.
+                                                                 // 0 represents false and 1 represents true.
+
+            num = ((rnd.Next(2) + 1) * 4) - 6;                   //Here, the direction the line will go is chosen randomly.
+                                                                 // If it is 2, it means it is going up or to the right; if it is -2, it means it is going down or to the left.
+
+            if (isItVertical && x + num < 5 && x + num >= 0)     //If it is vertical, it goes into this block.
+            {
+                if (lines[x + (num / 2), y] != '|')               //If there is a line, it does not process these blocks. If not, it draws lines according to the values.
+                {
+                    lines[x + (num / 2), y] = '|';                //Since the y values ​​remain the same, a line is added to one side of the selected point.
+                    counter++;
+                    if (x + (num / 2) == 1)                       //Here we check whether the line formed is at the top.
+                    {
+                        isItUpper = true;
+                    }
+                    if (y == 0)                                    //Here we check whether the line formed is on the far left.
+                    {
+                        isItFarLeft = true;
+                    }
+                    x = x + num;                                  //We update the x coordinate of the new point.
+
+                }
+            }
+            else if (!isItVertical && y + num < 5 && y + num >= 0) //If it is vertical, it goes into this block.
+            {
+                if (lines[x, y + (num / 2)] != '-')
+                {
+                    lines[x, y + (num / 2)] = '-';                //Since the x values ​​remain the same, a line is added to one side of the selected point.
+                    counter++;
+                    if (y + (num / 2) == 1)
+                    {
+                        isItFarLeft = true;
+                    }
+                    if (x == 0)
+                    {
+                        isItUpper = true;
+                    }
+                    y = y + num;                                   //We update the x coordinate of the new point.
+                }
+            }
+        }
+        while (!isItUpper)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    if ((lines[i, j] == '|') || (lines[i, j] == '-'))
+                    {
+                        lines[i - 2, j] = lines[i, j];             //If the line is not at the top, it moves it up until it is at the top.
+                        lines[i, j] = ' ';
+                        if ((i - 2 == 0) || (i - 2 == 1))          //When it reaches the top it will be out of this block.
+                        {
+                            isItUpper = true;
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+        while (!isItFarLeft)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    if ((lines[i, j] == '|') || (lines[i, j] == '-'))
+                    {
+                        lines[i, j - 2] = lines[i, j];              //If the line is not at the far left, it moves it left until it is at the far left.
+                        lines[i, j] = ' ';
+                        if ((j - 2 == 0) || (j - 2 == 1))           //When it reaches the far left it will be out of this block.
+                        {
+                            isItFarLeft = true;
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+        return lines;
+
+
+    }
+    static void Stage3Print()
+    {
+        char[,] lines = Stage3(3);
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                Console.Write(lines[i, j]);
+            }
+            Console.WriteLine();
+        }
+        Console.ReadLine();
+    }
+
     static void Main()
     {
         Console.Clear();
