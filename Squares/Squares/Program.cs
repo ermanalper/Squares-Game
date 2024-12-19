@@ -10,6 +10,7 @@ class Squares
     static bool[,] ownerless_squares = new bool[9, 16];
     static bool[,] player_ownership = new bool[9, 16];
     static bool[,] computer_ownership = new bool[9, 16];
+    static bool[,] new_lines = new bool[19, 33]; 
     static bool[,] lines = new bool[19, 33]; //   (even, even) points are constant
                                              //                                      and always "false" (they refer to "+")
 
@@ -31,6 +32,13 @@ class Squares
                     Console.Write("+");
                 else if (row * column % 2 == 1) // (odd, odd) point
                     Console.Write(" ");
+                else if (new_lines[row, column] == true)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    if (row % 2 == 0) Console.Write("-");             //The lines created for phase 3 appear in green.
+                    else Console.Write("|");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
                 else if (lines_array[row, column] == true)
                 {
                     if (row % 2 == 0) Console.Write("-");
@@ -809,18 +817,77 @@ class Squares
 
 
     }
-    static void Stage3Print()
+    static void Stage3Placing()
     {
-        char[,] lines = Stage3(3);
-        for (int i = 0; i < 5; i++)
+        int y = 0;
+        int x = 0;
+        bool flag = false;
+        bool[,] tempchars = new bool[5, 5];
+
+        for (int a = 3; a >= 1; a--)                     //The number of lines required for Stage 3 is controlled by the variable a.
         {
-            for (int j = 0; j < 5; j++)
+            y = random.Next(0, 15) * 2;                  //To start placement, a random point is chosen with x and y variables.
+            x = random.Next(0, 8) * 2;
+            char[,] chars = Stage3(a);
+            for (int i = 0; i < 5; i++)
             {
-                Console.Write(lines[i, j]);
+                for (int j = 0; j < 5; j++)
+                {
+                    tempchars[i, j] = false;             //We created a temporary bool array and made the inside wrong.
+                }
             }
-            Console.WriteLine();
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    Console.Write(chars[i, j]);
+                }
+                Console.WriteLine();
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    if (chars[i, j] == '|' || chars[i, j] == '-')
+                    {
+                        tempchars[i, j] = true;              //Pinned the selected rows to a temporary array so we could check them correctly when placing them.
+                    }
+                }
+            }
+            while (!flag)
+            {
+                flag = true;
+                y = random.Next(0, 15) * 2;                
+                x = random.Next(0, 8) * 2;
+                for (int i = 0; i < 5; i++)
+                {
+                    for (int j = 0; j < 5; j++)
+                    {
+                        if (tempchars[i, j] == true)
+                        {
+                            if (lines[i + x, j + y] == tempchars[i, j])  //Checking where the lines are in the 5 by 5 table.
+                            {
+                                flag = false;                            //By restoring the flag variable, rows from the selected point are placed in the main table and the loop can continue.
+                            }
+
+
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("y:" + x + " x:" + y);
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    if (chars[i, j] == true)
+                    {
+                        lines[i + x, j + y] = true;
+                        new_lines[i + x, j + y] = true;
+                    }
+                }
+            }
         }
-        Console.ReadLine();
     }
 
     static void Main()
@@ -853,6 +920,11 @@ class Squares
         OwnershipTag(ref player_ownership, lines, ownerless_squares, computer_ownership);
         PrintAll();
         Stage1(lines, ref player_ownership, ref ownerless_squares);
+
+        Stage3Placing();
+        Console.ReadLine();
+        OwnershipTag(ref player_ownership, lines, ownerless_squares, computer_ownership);
+        PrintAll();
 
         Console.ReadLine();
 
