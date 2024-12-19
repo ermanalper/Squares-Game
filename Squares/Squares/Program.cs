@@ -78,37 +78,133 @@ class Squares
         }
         return lines_array;
     }
-    static void besebestabloyazdırma()
+
+
+    static void Discretestage3()
     {
-        Console.Clear();
-        for (int i = 0; i < 5; i++)
+        void besebestabloyazdırma()
         {
-            for (int j = 0; j < 5; j++)
+            Console.Clear();
+            for (int i = 0; i < 5; i++)
             {
-                Console.SetCursorPosition(j, i);
-                if (i % 2 == 0 && j % 2 == 0) { Console.Write("+"); }
-                else if (i % 2 == 1 && j % 2 == 1) { Console.Write(" "); }
-                else if (rndcizgi[i, j])
+                for (int j = 0; j < 5; j++)
                 {
-                    if (i % 2 == 0 && j % 2 != 0)
-                    { Console.Write("-"); }
-                    else if (i % 2 != 0 && j % 2 == 0)
+                    Console.SetCursorPosition(j, i);
+                    if (i % 2 == 0 && j % 2 == 0) { Console.Write("+"); }
+                    else if (i % 2 == 1 && j % 2 == 1) { Console.Write(" "); }
+                    else if (rndcizgi[i, j])
                     {
-                        Console.Write("|");
+                        if (i % 2 == 0 && j % 2 != 0)
+                        { Console.Write("-"); }
+                        else if (i % 2 != 0 && j % 2 == 0)
+                        {
+                            Console.Write("|");
+                        }
                     }
                 }
             }
+            Console.ReadLine();
         }
-        Console.ReadLine();
-    }
+        void karsilastirma()
+        {
+            int count = 0;
+            bool c;
+            int rndxmainden, rndymainden;
 
-    static void Dicretestage3()
-    {
-        Random rnd = new Random();// burda gerekli değişkenleri atadım.
-                                  // bağlantılı olup olmadığını göstericek 1.adımda 4 se/ 2 de 3/ 3te 2 taneyse bağlantılı demektir.
-        int countstage3 = 0; // 3 bağlantılı şekilden 1 bağlantılı şekle kadarki stage aşamaları
-        int rndcizgix = 0; // dizinin x bileşeni
-        int rndcizgiy = 0;// dizinin y bileşeni 
+            do
+            {
+
+                c = false;
+
+                do
+                {
+                    rndxmainden = random.Next(2, 17); 
+                    rndymainden = random.Next(2, 31);  
+                } while (rndxmainden % 2 == 1 || rndymainden % 2 == 1); 
+
+                if (lines[rndxmainden - 1, rndymainden - 2] == true && rndcizgi[1, 0] == true)
+                {
+                    c = true;
+                }
+                if (lines[rndxmainden - 1, rndymainden] == true && rndcizgi[1, 2] == true)
+                {
+                    c = true;
+                }
+                if (lines[rndxmainden - 1, rndymainden + 2] == true && rndcizgi[1, 4] == true)
+                {
+                    c = true;
+                }
+                if (lines[rndxmainden + 1, rndymainden - 2] == true && rndcizgi[3, 0] == true)
+                {
+                    c = true;
+                }
+                if (lines[rndxmainden + 1, rndymainden] == true && rndcizgi[3, 2] == true)
+                {
+
+                    c = true;
+                }
+                if (lines[rndxmainden + 1, rndymainden + 2] == true && rndcizgi[3, 4] == true)
+                {
+
+                    c = true;
+                }
+                if (lines[rndxmainden - 2, rndymainden - 1] == true && rndcizgi[0, 1] == true)
+                {
+
+                    c = true;
+                }
+                if (lines[rndxmainden, rndymainden - 1] == true && rndcizgi[2, 1] == true)
+                {
+
+                    c = true;
+                }
+                if (lines[rndxmainden + 2, rndymainden - 1] == true && rndcizgi[4, 1] == true)
+                {
+
+                    c = true;
+                }
+                if (lines[rndxmainden - 2, rndymainden + 1] == true && rndcizgi[0, 3] == true)
+                {
+
+                    c = true;
+                }
+                if (lines[rndxmainden, rndymainden + 1] == true && rndcizgi[2, 2] == true)
+                {
+
+                    c = true;
+                }
+                if (lines[rndxmainden + 2, rndymainden + 1] == true && rndcizgi[4, 3] == true)
+                {
+
+                    c = true;
+                }
+
+            } while (c && count < 100);
+            if (c == false)
+            {
+                if (rndcizgi[4, 3]) { lines[rndxmainden + 2, rndymainden + 1] = rndcizgi[4, 3]; }
+                if (rndcizgi[2, 3]) { lines[rndxmainden, rndymainden + 1] = rndcizgi[2, 3]; }
+
+                if (rndcizgi[0, 3]) { lines[rndxmainden - 2, rndymainden + 1] = rndcizgi[0, 3]; }
+                if (rndcizgi[4, 1]) { lines[rndxmainden + 2, rndymainden - 1] = rndcizgi[4, 1]; }
+                if (rndcizgi[2, 1]) { lines[rndxmainden, rndymainden - 1] = rndcizgi[2, 1]; }
+                if (rndcizgi[0, 1]) { lines[rndxmainden - 2, rndymainden - 1] = rndcizgi[0, 1]; }
+                if (rndcizgi[1, 0]) { lines[rndxmainden - 1, rndymainden - 2] = rndcizgi[1, 0]; }
+                if (rndcizgi[1, 2]) { lines[rndxmainden - 1, rndymainden] = rndcizgi[1, 2]; }
+                if (rndcizgi[1, 4]) { lines[rndxmainden - 1, rndymainden + 2] = rndcizgi[1, 4]; }
+                if (rndcizgi[3, 0]) { lines[rndxmainden + 1, rndymainden - 2] = rndcizgi[3, 0]; }
+                if (rndcizgi[3, 2]) { lines[rndxmainden + 1, rndymainden] = rndcizgi[3, 2]; }
+                if (rndcizgi[3, 4]) { lines[rndxmainden + 1, rndymainden + 2] = rndcizgi[3, 4]; }
+
+            }
+            Console.ReadLine();
+
+
+
+        }
+        int countstage3 = 0;
+        int rndcizgix;
+        int rndcizgiy;
 
 
 
@@ -129,21 +225,21 @@ class Squares
                     connectedlik[i, j] = 0;
                 }
             }
-            for (int i = 0; i < 3 - countstage3; i++) // bu kenarlara + koyma işlemini adımlara göre 3 2 veya 1 defa yapıyorum.
+            for (int i = 0; i < 3 - countstage3; i++) 
             {
                 do
                 {
-                    rndcizgix = rnd.Next(0, 5);
-                    rndcizgiy = rnd.Next(0, 5);
-                } while ((rndcizgix % 2 == rndcizgiy % 2) || rndcizgi[rndcizgix, rndcizgiy] == true); // x ve y aynı anda tek ya da çift olmayana kadar dönmeli. 2 si de tek olursa boşluk kısımlar ikisi de çift olursa + ların geleceği kısım olmuş oluyor.
+                    rndcizgix = random.Next(0, 5);
+                    rndcizgiy = random.Next(0, 5);
+                } while ((rndcizgix % 2 == rndcizgiy % 2) || rndcizgi[rndcizgix, rndcizgiy] == true);
                 if (rndcizgix % 2 == 0 && rndcizgiy % 2 != 0)
                 {
-                    rndcizgi[rndcizgix, rndcizgiy] = true; // x çift y tek olursa yatay kısımlardan biri olmuş olur soluna ve sağına + diyip o kısma true koyuyorum.
+                    rndcizgi[rndcizgix, rndcizgiy] = true; 
                     connectedlik[rndcizgix, rndcizgiy - 1] = 1;
                     connectedlik[rndcizgix, rndcizgiy + 1] = 1;
 
                 }
-                else if (rndcizgix % 2 != 0 && rndcizgiy % 2 == 0)// x tek y çift olursa dikey kısımlardan biri olmuş olur yukarısına ve aşağısına + diyip o kısma true atıyorum.
+                else if (rndcizgix % 2 != 0 && rndcizgiy % 2 == 0)
                 {
                     rndcizgi[rndcizgix, rndcizgiy] = true;
                     connectedlik[rndcizgix - 1, rndcizgiy] = 1;
@@ -151,7 +247,7 @@ class Squares
                 }
             }
 
-            for (int i = 0; i < rndcizgi.GetLength(0); i += 2) //connectedlıa atadığım + değerlerini sayıyorum
+            for (int i = 0; i < rndcizgi.GetLength(0); i += 2) 
             {
                 for (int j = 0; j < rndcizgi.GetLength(1); j += 2)
                 {
@@ -164,7 +260,7 @@ class Squares
 
                 besebestabloyazdırma();
                 Console.Clear();
-                while (!(connectedlik[0, 0] == 1 || connectedlik[0, 2] == 1 || connectedlik[0, 4] == 1))//yukarı shitlemek için
+                while (!(connectedlik[0, 0] == 1 || connectedlik[0, 2] == 1 || connectedlik[0, 4] == 1))
                 {
                     for (int i = 0; i <= rndcizgi.GetLength(0) - 1; i += 2)
                     {
@@ -183,7 +279,7 @@ class Squares
                     }
 
                 }
-                while (!(connectedlik[0, 0] == 1 || connectedlik[2, 0] == 1 || connectedlik[4, 0] == 1))//sola shiftlemek için
+                while (!(connectedlik[0, 0] == 1 || connectedlik[2, 0] == 1 || connectedlik[4, 0] == 1))
                 {
                     for (int i = 0; i <= rndcizgi.GetLength(0) - 1; i += 2)
                     {
@@ -198,20 +294,29 @@ class Squares
                             rndcizgi[i + 1, 2] = rndcizgi[i + 1, 4];
                             rndcizgi[i + 1, 4] = false;
                         }
+
                     }
 
                 }
-
-
                 besebestabloyazdırma();
-                Console.ReadLine();
+                Console.Clear();
+                karsilastirma();
 
                 countstage3++;
+
+
+
             }
 
-
         }
+
+
+
+
+
     }
+
+    
         static void OwnershipTag(ref bool[,] whose_ownership, bool[,] lines_array, bool[,] check_array, bool[,] check_array2)
     {
         //       To check if the move has formed a square, write their array
@@ -880,7 +985,7 @@ class Squares
             {
                 for (int j = 0; j < 5; j++)
                 {
-                    if (chars[i, j] == true)
+                    if (tempchars[i, j] == true)
                     {
                         lines[i + x, j + y] = true;
                         new_lines[i + x, j + y] = true;

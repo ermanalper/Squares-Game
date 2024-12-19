@@ -8,24 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Lenovo\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\sengu\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\Squares-Game\\Squares\\Squares\\Squares.csproj",
+      "projectUniqueName": "C:\\Users\\sengu\\Desktop\\Squares-Game\\Squares\\Squares\\Squares.csproj",
       "projectName": "Squares",
-      "projectPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\Squares-Game\\Squares\\Squares\\Squares.csproj",
-      "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Lenovo\\OneDrive\\Desktop\\Squares-Game\\Squares\\Squares\\obj\\",
+      "projectPath": "C:\\Users\\sengu\\Desktop\\Squares-Game\\Squares\\Squares\\Squares.csproj",
+      "packagesPath": "C:\\Users\\sengu\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\sengu\\Desktop\\Squares-Game\\Squares\\Squares\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\sengu\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -33,7 +28,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
