@@ -10,14 +10,14 @@ class Squares
     static bool[,] ownerless_squares = new bool[9, 16];
     static bool[,] player_ownership = new bool[9, 16];
     static bool[,] computer_ownership = new bool[9, 16];
-    static bool[,] new_lines = new bool[19, 33]; 
+    static bool[,] new_lines = new bool[19, 33];
     static bool[,] lines = new bool[19, 33]; //   (even, even) points are constant
                                              //                                      and always "false" (they refer to "+")
 
     //                                      (odd, odd) points refer to squareable areas
     //                                      and "true" iff there is a square (P, C, or ownerless (:))
-  static bool[,] rndcizgi = new bool[5, 5]; 
-   static int[,] connectedlik = new int[5, 5];
+    static bool[,] rndcizgi = new bool[5, 5];
+    static int[,] connectedlik = new int[5, 5];
 
 
     static void LinePrint(bool[,] lines_array) //      This function prints the current state of the board
@@ -118,9 +118,9 @@ class Squares
 
                 do
                 {
-                    rndxmainden = random.Next(2, 17); 
-                    rndymainden = random.Next(2, 31);  
-                } while (rndxmainden % 2 == 1 || rndymainden % 2 == 1); 
+                    rndxmainden = random.Next(2, 17);
+                    rndymainden = random.Next(2, 31);
+                } while (rndxmainden % 2 == 1 || rndymainden % 2 == 1);
 
                 if (lines[rndxmainden - 1, rndymainden - 2] == true && rndcizgi[1, 0] == true)
                 {
@@ -225,7 +225,7 @@ class Squares
                     connectedlik[i, j] = 0;
                 }
             }
-            for (int i = 0; i < 3 - countstage3; i++) 
+            for (int i = 0; i < 3 - countstage3; i++)
             {
                 do
                 {
@@ -234,7 +234,7 @@ class Squares
                 } while ((rndcizgix % 2 == rndcizgiy % 2) || rndcizgi[rndcizgix, rndcizgiy] == true);
                 if (rndcizgix % 2 == 0 && rndcizgiy % 2 != 0)
                 {
-                    rndcizgi[rndcizgix, rndcizgiy] = true; 
+                    rndcizgi[rndcizgix, rndcizgiy] = true;
                     connectedlik[rndcizgix, rndcizgiy - 1] = 1;
                     connectedlik[rndcizgix, rndcizgiy + 1] = 1;
 
@@ -247,7 +247,7 @@ class Squares
                 }
             }
 
-            for (int i = 0; i < rndcizgi.GetLength(0); i += 2) 
+            for (int i = 0; i < rndcizgi.GetLength(0); i += 2)
             {
                 for (int j = 0; j < rndcizgi.GetLength(1); j += 2)
                 {
@@ -316,8 +316,8 @@ class Squares
 
     }
 
-    
-        static void OwnershipTag(ref bool[,] whose_ownership, bool[,] lines_array, bool[,] check_array, bool[,] check_array2)
+
+    static void OwnershipTag(ref bool[,] whose_ownership, bool[,] lines_array, bool[,] check_array, bool[,] check_array2)
     {
         //       To check if the move has formed a square, write their array
         //        instead of "whose_ownership"
@@ -435,12 +435,12 @@ class Squares
         Console.SetCursorPosition(34, 8);
         int cCount = 0;
         foreach (bool s in computer_ownership) if (s == true) cCount++;
-        
+
         Console.Write($"Computer squares: {cCount}");
         Console.SetCursorPosition(34, 9);
         int oCount = 0;
         foreach (bool s in ownerless_squares) if (s == true) oCount++;
-       
+
         Console.Write($"Ownerless squares: {oCount}");
 
         Console.SetCursorPosition(0, 19);
@@ -595,7 +595,7 @@ class Squares
             int squareCol = 0;  //unassigned
             bool irregularFormed = false;
             bool isNeighbor = false;
-            
+
 
             // check all the squares on the board
             for (int row = 1; row <= 17; row += 2)
@@ -612,7 +612,7 @@ class Squares
                         // if it is already a square continue 
                         if (player_ownership[squareRow, squareCol] || ownerless_squares[squareRow, squareCol])
                             continue;
-                        
+
                         dispRow = squareRow;
                         dispCol = squareCol;
 
@@ -620,7 +620,7 @@ class Squares
                         if (lastSquareRow == -1)
                         {
                             player_ownership[squareRow, squareCol] = true;
-                            
+
                             first = true;
 
                             lastSquareRow = squareRow;
@@ -642,8 +642,8 @@ class Squares
                             {
                                 player_ownership[squareRow, squareCol] = true;
 
-                                
-                                
+
+
                                 lastSquareRow = squareRow;
                                 lastSquareCol = squareCol;
                                 squareFormed = true;
@@ -653,7 +653,7 @@ class Squares
                                 // if the new square is not neighbour 
 
                                 ownerless_squares[squareRow, squareCol] = true;
-                                
+
                                 playerScore -= 5;
                                 irregularFormed = true;
                                 irrRow = squareRow;
@@ -667,98 +667,120 @@ class Squares
             if (!squareFormed)
             {
                 Console.SetCursorPosition(0, 19);
-                
+
                 continueSquaring = false;
-                
-                
+
+
             }
             else playerScore++;
             PrintAll();
-            if (first) 
+            if (first)
             {
                 Console.WriteLine($"First square formed at ({dispRow}, {dispCol})!");
                 first = false;
             }
-            else if(isNeighbor) Console.WriteLine($"Square formed at ({dispRow}, {dispCol})!");
-            if(!squareFormed)
+            else if (isNeighbor) Console.WriteLine($"Square formed at ({dispRow}, {dispCol})!");
+            if (!squareFormed)
             {
                 Console.WriteLine("No more squares can be formed. Stage 1 ends.");
-                if (irregularFormed)Console.WriteLine($"Irregular square at ({dispRow}, {dispCol})! -5 points.");
+                if (irregularFormed) Console.WriteLine($"Irregular square at ({dispRow}, {dispCol})! -5 points.");
             }
 
         }
         cursor_x = 2;
         cursor_y = 1;
 
-        
+
     }
 
 
 
 
-    static bool IsTheAreaSquareable(int i, int j) // is the area squareable just by adding 1 new line
+    static bool IsTheAreaSquareable(int i, int j, bool[,] lines_array) // is the area squareable just by adding 1 new line
     {                               // !! PARAMETERS ARE i, j OF OWNERSHIP ARRAYS (not lines array)
                                     // ownership arrays are [9, 16], where the lines array is [19, 33].
-                                    // the function returns true or false by calcculating the corresponding i, j
+                                    // the function returns true or false by calculating the corresponding i, j
                                     // point in the lines array
         byte counter = 0;
-        if(lines[(2*i) + 1, 2 * j]) counter++;
-        if (lines[2*i, (2*j) + 1]) counter++;
-        if(lines[(2*i) + 1, (2 * j) + 2]) counter++;
-        if(lines[(2*i) + 2, (2*j) + 1]) counter++;
+        if (lines_array[(2 * i) + 1, 2 * j]) counter++;
+        if (lines_array[2 * i, (2 * j) + 1]) counter++;
+        if (lines_array[(2 * i) + 1, (2 * j) + 2]) counter++;
+        if (lines_array[(2 * i) + 2, (2 * j) + 1]) counter++;
+
         
+
+
+
         return counter == 3;
     }
-    
-    static void SquareTheArea(ref bool[,] imaginaryLines, int i, int j)// this makes a square in the selected area
-    {
-        imaginaryLines[(2*i) + 1, 2 * j] = true;
-        imaginaryLines[2*i, (2*j) + 1] = true;
-        imaginaryLines[(2*i) + 1, (2 * j) + 2] = true;
-        imaginaryLines[(2*i) + 2, (2*j) + 1] = true;
+
+    static void SquareTheArea(ref bool[,] lines_array, int i, int j, bool mode)// this makes a square in the selected area
+    {                                                   // For lines_array:
+                                                        // if ComputerAIStage1 function, use "imaginaryLines"
+        lines_array[(2 * i) + 1, 2 * j] = true; // if DisplayComputerMoves function, use "lines"
+        lines_array[(2 * i), (2 * j) + 1] = true;
+        lines_array[(2 * i) + 1, (2 * j) + 2] = true;
+        lines_array[(2 * i) + 2, (2 * j) + 1] = true;
+
+        // MODE: IF YOU ARE DISPLAYING AFTER SQUARING, USE true
+        // e.g. if lines_array == imaginaryLines: false
+        //      if lines_array == 'lines' (that is the array we display on the board) : true
+        if (mode)
+        {
+            Console.SetCursorPosition(2 * j, (2 * i) + 1);
+            Console.Write("|");
+            Console.SetCursorPosition((2 * j) + 1, 2 * i);
+            Console.Write("-");
+            Console.SetCursorPosition((2 * j) + 2, (2 * i) + 1);
+            Console.Write("|");
+            Console.SetCursorPosition((2 * j) + 1, (2 * i) + 2);
+            Console.Write("-");
+            Console.SetCursorPosition(2 * j + 1, (2 * i) + 1);
+            
+            OwnershipTag(ref computer_ownership, lines, player_ownership, ownerless_squares);
+            PrintOwnership(2, computer_ownership);
+        }
     }
 
 
-    
-    static void ComputerAIStage1(int difficulty) // difficulty is either 5 or 50 or 500 
+
+
+
+    static void ComputerAIStage1(int difficulty, ref byte[] theBestDirections, ref int[] theBestStartingPoint) // difficulty is either 5 or 50 or 500 
     {
 
         int highestSquareCountReached = 0;
 
-        byte[] theBestDirections = new byte[143]; // a total of 144 boards on the board, so max 143 directions
-                                    // can be choosen at a time. (it will probably never happen...) 
-        byte[] theBestStartingPoint = new byte[2];
+
         for (int i = 0; i < 9; i++)
         {
             for (int j = 0; j < 16; j++)
             {
-                if (ownerless_squares[i, j] || player_ownership[i, j] || computer_ownership[i, j]) continue;
-                // skip to the next AREA if the current one is already a square
-                
-                if (IsTheAreaSquareable(i, j)) // now we found a starting point that can be turned into a square
+                if (IsTheAreaSquareable(i, j, lines)) // now we found a starting point that can be turned into a square
                 {
-                    
+
                     int x = i, y = j;
                     for (int tries = 0; tries < difficulty; tries++)
                     {
                         bool[,] imaginaryLines = (bool[,])lines.Clone();
                         bool keepSquaring = true;
-                        SquareTheArea(ref imaginaryLines, i , j);
+                        SquareTheArea(ref imaginaryLines, i, j, false);
                         int newSquares = 1;
 
-                        byte[]currentDirections = new byte[143];
+                        byte[] currentDirections = new byte[143];
                         int directionIndex = 0;
                         byte direction;
 
-                        while(keepSquaring)
+                        while (keepSquaring)
                         {
                             int currX = x, currY = y;
-                            do{
+                            do
+                            {
                                 x = currX;
                                 y = currY;
                                 direction = (byte)random.Next(1, 5); // 1: UP, 2: RIGHT, 3: DOWN, 4: LEFT
-                                                                    // (0 is used in the array where we hold the directions
-                                                                    // so it would be a problem if 0 sampled a direction)
+                                                                     // (0 is used in the array where we hold the directions
+                                                                     // so it would be a problem if 0 sampled a direction)
                                 switch (direction)
                                 {
                                     case 1: // UP
@@ -774,36 +796,43 @@ class Squares
                                         y--;
                                         break;
                                 }
-                            }while(x >= 0 && y >= 0 && x < 9 && y < 16); // now the ai has chosen a valid direction
-                            // (x, y) is the neighbor area that it will try to square next
-                            if(!IsTheAreaSquareable(x, y)) keepSquaring = false;
-                            else
+                            } while (!(x >= 0 && y >= 0 && x < 9 && y < 16)); // now the ai has chosen a valid direction
+                                                                              // (x, y) is the neighbor area that it will try to square next
+                            if (IsTheAreaSquareable(x, y, imaginaryLines))
                             {
-                                SquareTheArea(ref imaginaryLines, x, y);
+                                SquareTheArea(ref imaginaryLines, x, y, false);
                                 newSquares++;
                                 currentDirections[directionIndex] = direction;
                                 directionIndex++;
                             }
+                            else
+                            {
+                                keepSquaring = false;
+                            }
+                         
                         }
-                        if(newSquares > highestSquareCountReached) // setting the new high
+
+                        if (newSquares > highestSquareCountReached) // setting the new high
                         {
+
                             highestSquareCountReached = newSquares;
-                            for (int b = 0; b < theBestDirections.Length; b++) b = 0; // reset the directions array
-                            int insertIndex = 0;
-                            int nextIndex = 1;
-                            do{
-                                theBestDirections[insertIndex] = currentDirections[insertIndex];
-                                insertIndex++;
-                                nextIndex++;
-                            }while(nextIndex != 0 && insertIndex < 143); //stored the best directions
-                            // Format: 4, 2, 1, 4, 3, 0, 0, 0, 0, 0, 0, .....0    :: total 143 numbers
-                            theBestStartingPoint[0] = (byte)i;
-                            theBestStartingPoint[1] = (byte)j;
+                           for (int b = 0; b < theBestDirections.Length; b++) theBestDirections[b] = 0; // reset the directions array
+                            
+
+                           theBestDirections = (byte[])currentDirections.Clone();
+                                         //stored the best directions
+                                         // Format: 4, 2, 1, 4, 3, 0, 0, 0, 0, 0, 0, .....0    :: total 143 numbers
+                            theBestStartingPoint[0] = i;
+                            theBestStartingPoint[1] = j;
+
                         }
+                        
+
                     }
                 }
 
             }
+            
         }
     }
     // now we have the best starting point -> theBestStartingPoint
@@ -962,7 +991,7 @@ class Squares
             while (!flag)
             {
                 flag = true;
-                y = random.Next(0, 15) * 2;                
+                y = random.Next(0, 15) * 2;
                 x = random.Next(0, 8) * 2;
                 for (int i = 0; i < 5; i++)
                 {
@@ -995,6 +1024,63 @@ class Squares
         }
     }
 
+    static void DisplayComputerMoves(int i, int j, byte[] directions, int programcounter)
+    {
+
+        SquareTheArea(ref lines, i, j, true);
+        if (programcounter == 0)
+        {
+            Console.SetCursorPosition(35, 12);
+            Console.Write("Starting Point: " + i + ", " + j);
+            Console.SetCursorPosition(35, 13);
+            Console.Write("Best Directions: ");
+        }
+        
+            Console.SetCursorPosition(53 + (5 * programcounter), 13);
+            if (directions[programcounter] == 1) Console.Write("UP ");
+            else if (directions[programcounter] == 2) Console.Write("RIGHT ");
+            else if (directions[programcounter] == 3) Console.Write("DOWN ");
+            else if (directions[programcounter] == 4) Console.Write("LEFT ");
+            else Console.Write("END.");
+
+        
+        
+        
+        
+        
+        Console.ReadLine();
+
+        if (directions[programcounter] == 0) return;
+
+        else if (directions[programcounter] == 1) DisplayComputerMoves(i - 1, j, directions, programcounter + 1);
+        else if (directions[programcounter] == 2) DisplayComputerMoves(i, j + 1, directions, programcounter + 1);
+        else if (directions[programcounter] == 3) DisplayComputerMoves(i + 1, j, directions, programcounter + 1);
+        else if (directions[programcounter] == 4) DisplayComputerMoves(i, j - 1, directions, programcounter + 1);
+
+    }
+
+    static void ComputerMove(int difficulty)
+    {
+        PrintAll();
+        Console.SetCursorPosition(34, 1);
+        Console.Write("Computer's Turn");
+        Console.SetCursorPosition(34, 2);
+        Console.Write("Stage 1");
+        byte[] theBestDirections = new byte[143]; // a total of 144 boards on the board, so max 143 directions
+                                                  // can be choosen at a time. (it will probably never happen...) 
+        int[] theBestStartingPoint = new int[2];
+        ComputerAIStage1(difficulty, ref theBestDirections, ref theBestStartingPoint);
+        Console.SetCursorPosition(0, 23);
+        foreach (byte dir in theBestDirections) Console.Write(dir + " ");
+        DisplayComputerMoves(theBestStartingPoint[0], theBestStartingPoint[1], theBestDirections, 0);
+        
+
+        
+        
+        
+    }
+
+    
     static void Main()
     {
         Console.Clear();
@@ -1025,14 +1111,21 @@ class Squares
         OwnershipTag(ref player_ownership, lines, ownerless_squares, computer_ownership);
         PrintAll();
         Stage1(lines, ref player_ownership, ref ownerless_squares);
+        /*
+                Stage3Placing();
+                Console.ReadLine();
+                OwnershipTag(ref player_ownership, lines, ownerless_squares, computer_ownership);
+                PrintAll();
 
-        Stage3Placing();
+                Console.ReadLine();
+
+
+        */
         Console.ReadLine();
-        OwnershipTag(ref player_ownership, lines, ownerless_squares, computer_ownership);
-        PrintAll();
 
-        Console.ReadLine();
-
+        //   ComputerMove(50000);
+        ComputerMove(500000);
+        
 
 
 
