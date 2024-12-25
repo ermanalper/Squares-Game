@@ -707,8 +707,6 @@ class Squares
         if (lines_array[(2 * i) + 1, (2 * j) + 2]) counter++;
         if (lines_array[(2 * i) + 2, (2 * j) + 1]) counter++;
 
-        
-
 
 
         return counter == 3;
@@ -736,9 +734,12 @@ class Squares
             Console.SetCursorPosition((2 * j) + 1, (2 * i) + 2);
             Console.Write("-");
             Console.SetCursorPosition(2 * j + 1, (2 * i) + 1);
-            
-            OwnershipTag(ref computer_ownership, lines, player_ownership, ownerless_squares);
+
+            computer_ownership[i, j] = true;
+            OwnershipTag(ref ownerless_squares, lines, player_ownership, computer_ownership); // if any extra square occured (2 squares at the same time)
+                                                                                         // mark it ass ownerless
             PrintOwnership(2, computer_ownership);
+            PrintOwnership(0, ownerless_squares);
         }
     }
 
@@ -759,80 +760,64 @@ class Squares
                 if (IsTheAreaSquareable(i, j, lines)) // now we found a starting point that can be turned into a square
                 {
 
-                    int x = i, y = j;
+
                     for (int tries = 0; tries < difficulty; tries++)
                     {
-                        bool[,] imaginaryLines = (bool[,])lines.Clone();
-                        bool keepSquaring = true;
-                        SquareTheArea(ref imaginaryLines, i, j, false);
-                        int newSquares = 1;
-
+                        int x = i, y = j;
                         byte[] currentDirections = new byte[143];
-                        int directionIndex = 0;
-                        byte direction;
+                        int squaresMade = 0;
+
+                        bool[,] imaginaryLines = (bool[,])lines.Clone(); // it will try to square the area with these imaginary lines, 
+                                                                         // and update the real lines array with the best sequence
+
+                        bool keepSquaring = true;
 
                         while (keepSquaring)
                         {
-                            int currX = x, currY = y;
+                            SquareTheArea(ref imaginaryLines, x, y, false);
+                            squaresMade++;
+                            int xSave = x, ySave = y;
+                            byte direction;
                             do
                             {
-                                x = currX;
-                                y = currY;
-                                direction = (byte)random.Next(1, 5); // 1: UP, 2: RIGHT, 3: DOWN, 4: LEFT
-                                                                     // (0 is used in the array where we hold the directions
-                                                                     // so it would be a problem if 0 sampled a direction)
+                                x = xSave;
+                                y = ySave;
+                                direction = (byte)random.Next(1, 5);
                                 switch (direction)
                                 {
-                                    case 1: // UP
+                                    case 1: // up
                                         x--;
                                         break;
-                                    case 2: // RIGHT
+                                    case 2: // right
                                         y++;
                                         break;
-                                    case 3: // DOWN
+                                    case 3: // down
                                         x++;
                                         break;
-                                    case 4: //LEFT
+                                    case 4: // left
                                         y--;
                                         break;
                                 }
-                            } while (!(x >= 0 && y >= 0 && x < 9 && y < 16)); // now the ai has chosen a valid direction
-                                                                              // (x, y) is the neighbor area that it will try to square next
-                            if (IsTheAreaSquareable(x, y, imaginaryLines))
-                            {
-                                SquareTheArea(ref imaginaryLines, x, y, false);
-                                newSquares++;
-                                currentDirections[directionIndex] = direction;
-                                directionIndex++;
-                            }
-                            else
-                            {
-                                keepSquaring = false;
-                            }
-                         
+                            } while (x < 0 || x > 8 || y < 0 || y > 15); // now it has chosen a valid direction
+                            if (!IsTheAreaSquareable(x, y, imaginaryLines)) keepSquaring = false; // if a square cannot be formed in that direction
+                                                                                                  // , stop squaring and 
+                                                                                                  // move on to the next try / starting point
+                            else currentDirections[squaresMade - 1] = direction;
                         }
-
-                        if (newSquares > highestSquareCountReached) // setting the new high
+                        if (squaresMade > highestSquareCountReached)
                         {
-
-                            highestSquareCountReached = newSquares;
-                           for (int b = 0; b < theBestDirections.Length; b++) theBestDirections[b] = 0; // reset the directions array
-                            
-
-                           theBestDirections = (byte[])currentDirections.Clone();
-                                         //stored the best directions
-                                         // Format: 4, 2, 1, 4, 3, 0, 0, 0, 0, 0, 0, .....0    :: total 143 numbers
-                            theBestStartingPoint[0] = i;
+                            highestSquareCountReached = squaresMade;
+                            theBestStartingPoint[0] = i;                 // save that sequence as the best one
                             theBestStartingPoint[1] = j;
-
+                            for (int m = 0; m < squaresMade; m++)
+                            {
+                                theBestDirections[m] = currentDirections[m];
+                            }
                         }
-                        
-
                     }
                 }
-
             }
-            
+
         }
     }
     // now we have the best starting point -> theBestStartingPoint
@@ -1024,38 +1009,41 @@ class Squares
         }
     }
 
-    static void DisplayComputerMoves(int i, int j, byte[] directions, int programcounter)
+    static void DisplayComputerMoves(int i, int j, byte[] directions, int programcounter, int prevLength)
     {
-
+        // THIS IS A RECURSIVE FUNCTION THAT DISPLAYS THE COMPUTER'S MOVES ON THE RIGHT SIDE OF THE SCREEN
+        // programcounter is the NEXT INDEX (in the directions array) of the direction that will be displayed
         SquareTheArea(ref lines, i, j, true);
         if (programcounter == 0)
         {
-            Console.SetCursorPosition(35, 12);
+            Console.SetCursorPosition(34, 12);
             Console.Write("Starting Point: " + i + ", " + j);
-            Console.SetCursorPosition(35, 13);
+            Console.SetCursorPosition(34, 13);
             Console.Write("Best Directions: ");
         }
-        
-            Console.SetCursorPosition(53 + (5 * programcounter), 13);
-            if (directions[programcounter] == 1) Console.Write("UP ");
-            else if (directions[programcounter] == 2) Console.Write("RIGHT ");
-            else if (directions[programcounter] == 3) Console.Write("DOWN ");
-            else if (directions[programcounter] == 4) Console.Write("LEFT ");
-            else Console.Write("END.");
+        string display = "";
+        if (directions[programcounter] == 1) display = "UP ";
+        else if (directions[programcounter] == 2) display = "RIGHT ";
+        else if (directions[programcounter] == 3) display = "DOWN ";
+        else if (directions[programcounter] == 4) display = "LEFT ";
+        else display = "END.";
 
-        
-        
-        
-        
-        
+        Console.SetCursorPosition(51 + prevLength , 13);
+        prevLength += display.Length;
+        Console.Write(display);       // prevLength is the direction's length, so that the next direction will be displayed
+                                      // with the proper CursorPosition (space between the directions (RIGHT, LEFT etc.) will be equal)
+
+
+
+
         Console.ReadLine();
 
         if (directions[programcounter] == 0) return;
 
-        else if (directions[programcounter] == 1) DisplayComputerMoves(i - 1, j, directions, programcounter + 1);
-        else if (directions[programcounter] == 2) DisplayComputerMoves(i, j + 1, directions, programcounter + 1);
-        else if (directions[programcounter] == 3) DisplayComputerMoves(i + 1, j, directions, programcounter + 1);
-        else if (directions[programcounter] == 4) DisplayComputerMoves(i, j - 1, directions, programcounter + 1);
+        else if (directions[programcounter] == 1) DisplayComputerMoves(i - 1, j, directions, programcounter + 1, prevLength);
+        else if (directions[programcounter] == 2) DisplayComputerMoves(i, j + 1, directions, programcounter + 1, prevLength);
+        else if (directions[programcounter] == 3) DisplayComputerMoves(i + 1, j, directions, programcounter + 1, prevLength);
+        else if (directions[programcounter] == 4) DisplayComputerMoves(i, j - 1, directions, programcounter + 1, prevLength);
 
     }
 
@@ -1072,15 +1060,15 @@ class Squares
         ComputerAIStage1(difficulty, ref theBestDirections, ref theBestStartingPoint);
         Console.SetCursorPosition(0, 23);
         foreach (byte dir in theBestDirections) Console.Write(dir + " ");
-        DisplayComputerMoves(theBestStartingPoint[0], theBestStartingPoint[1], theBestDirections, 0);
-        
+        DisplayComputerMoves(theBestStartingPoint[0], theBestStartingPoint[1], theBestDirections, 0, 0);
 
-        
-        
-        
+
+
+
+
     }
 
-    
+
     static void Main()
     {
         Console.Clear();
@@ -1108,8 +1096,7 @@ class Squares
         PrintAll();
 
         //AddNewLineWithCursor(ref lines);
-        OwnershipTag(ref player_ownership, lines, ownerless_squares, computer_ownership);
-        PrintAll();
+
         Stage1(lines, ref player_ownership, ref ownerless_squares);
         /*
                 Stage3Placing();
@@ -1124,8 +1111,9 @@ class Squares
         Console.ReadLine();
 
         //   ComputerMove(50000);
-        ComputerMove(500000);
+        ComputerMove(500);
         
+
 
 
 
