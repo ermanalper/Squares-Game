@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Squares")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eb53ee7d897c8b603dbe191255c5becede106867")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+89e26832a93807bcf585c4674b2c8d3172961710")]
 [assembly: System.Reflection.AssemblyProductAttribute("Squares")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Squares")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
