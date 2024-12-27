@@ -82,14 +82,21 @@ class Squares
 
     static void Discretestage3()
     {
+
+
+        int hehe = 0;
+        int x = 0, y = 22;
+        int abc = 0;
+
         void besebestabloyazdırma()
         {
-            Console.Clear();
+            y = 22;
             for (int i = 0; i < 5; i++)
             {
+                x = 0;
                 for (int j = 0; j < 5; j++)
                 {
-                    Console.SetCursorPosition(j, i);
+                    Console.SetCursorPosition(x + abc, y);
                     if (i % 2 == 0 && j % 2 == 0) { Console.Write("+"); }
                     else if (i % 2 == 1 && j % 2 == 1) { Console.Write(" "); }
                     else if (rndcizgi[i, j])
@@ -101,10 +108,35 @@ class Squares
                             Console.Write("|");
                         }
                     }
+                    x++;
+                }
+                y++;
+
+            }
+            if (hehe == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.SetCursorPosition(x + abc, y - 3);
+                Console.Write(" -->");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+
+        }
+        void besebessilme()
+        {
+            Console.ReadLine();
+            for (int i = 0; i < 65; i++)
+            {
+                for (int j = 22; j < 27; j++)
+                {
+                    Console.SetCursorPosition(i, j);
+                    Console.Write(' ');
                 }
             }
-            Console.ReadLine();
+            x = 0;
+            abc = 0;
         }
+
         void karsilastirma()
         {
             int count = 0;
@@ -118,9 +150,9 @@ class Squares
 
                 do
                 {
-                    rndxmainden = random.Next(2, 17); 
-                    rndymainden = random.Next(2, 31);  
-                } while (rndxmainden % 2 == 1 || rndymainden % 2 == 1); 
+                    rndxmainden = random.Next(2, 17);
+                    rndymainden = random.Next(2, 31);
+                } while (rndxmainden % 2 == 1 || rndymainden % 2 == 1);
 
                 if (lines[rndxmainden - 1, rndymainden - 2] == true && rndcizgi[1, 0] == true)
                 {
@@ -182,22 +214,20 @@ class Squares
             } while (c && count < 100);
             if (c == false)
             {
-                if (rndcizgi[4, 3]) { lines[rndxmainden + 2, rndymainden + 1] = rndcizgi[4, 3]; }
-                if (rndcizgi[2, 3]) { lines[rndxmainden, rndymainden + 1] = rndcizgi[2, 3]; }
-
-                if (rndcizgi[0, 3]) { lines[rndxmainden - 2, rndymainden + 1] = rndcizgi[0, 3]; }
-                if (rndcizgi[4, 1]) { lines[rndxmainden + 2, rndymainden - 1] = rndcizgi[4, 1]; }
-                if (rndcizgi[2, 1]) { lines[rndxmainden, rndymainden - 1] = rndcizgi[2, 1]; }
-                if (rndcizgi[0, 1]) { lines[rndxmainden - 2, rndymainden - 1] = rndcizgi[0, 1]; }
-                if (rndcizgi[1, 0]) { lines[rndxmainden - 1, rndymainden - 2] = rndcizgi[1, 0]; }
-                if (rndcizgi[1, 2]) { lines[rndxmainden - 1, rndymainden] = rndcizgi[1, 2]; }
-                if (rndcizgi[1, 4]) { lines[rndxmainden - 1, rndymainden + 2] = rndcizgi[1, 4]; }
-                if (rndcizgi[3, 0]) { lines[rndxmainden + 1, rndymainden - 2] = rndcizgi[3, 0]; }
-                if (rndcizgi[3, 2]) { lines[rndxmainden + 1, rndymainden] = rndcizgi[3, 2]; }
-                if (rndcizgi[3, 4]) { lines[rndxmainden + 1, rndymainden + 2] = rndcizgi[3, 4]; }
+                if (rndcizgi[4, 3]) { lines[rndxmainden + 2, rndymainden + 1] = rndcizgi[4, 3]; new_lines[rndxmainden + 2, rndymainden + 1] = rndcizgi[4, 3]; }
+                if (rndcizgi[2, 3]) { lines[rndxmainden, rndymainden + 1] = rndcizgi[2, 3]; new_lines[rndxmainden, rndymainden + 1] = rndcizgi[2, 3]; }
+                if (rndcizgi[0, 3]) { lines[rndxmainden - 2, rndymainden + 1] = rndcizgi[0, 3]; new_lines[rndxmainden - 2, rndymainden + 1] = rndcizgi[0, 3]; }
+                if (rndcizgi[4, 1]) { lines[rndxmainden + 2, rndymainden - 1] = rndcizgi[4, 1]; new_lines[rndxmainden + 2, rndymainden - 1] = rndcizgi[4, 1]; }
+                if (rndcizgi[2, 1]) { lines[rndxmainden, rndymainden - 1] = rndcizgi[2, 1]; new_lines[rndxmainden, rndymainden - 1] = rndcizgi[2, 1]; }
+                if (rndcizgi[0, 1]) { lines[rndxmainden - 2, rndymainden - 1] = rndcizgi[0, 1]; new_lines[rndxmainden - 2, rndymainden - 1] = rndcizgi[0, 1]; }
+                if (rndcizgi[1, 0]) { lines[rndxmainden - 1, rndymainden - 2] = rndcizgi[1, 0]; new_lines[rndxmainden - 1, rndymainden - 2] = rndcizgi[1, 0]; }
+                if (rndcizgi[1, 2]) { lines[rndxmainden - 1, rndymainden] = rndcizgi[1, 2]; new_lines[rndxmainden - 1, rndymainden] = rndcizgi[1, 2]; }
+                if (rndcizgi[1, 4]) { lines[rndxmainden - 1, rndymainden + 2] = rndcizgi[1, 4]; new_lines[rndxmainden - 1, rndymainden + 2] = rndcizgi[1, 4]; }
+                if (rndcizgi[3, 0]) { lines[rndxmainden + 1, rndymainden - 2] = rndcizgi[3, 0]; new_lines[rndxmainden + 1, rndymainden - 2] = rndcizgi[3, 0]; }
+                if (rndcizgi[3, 2]) { lines[rndxmainden + 1, rndymainden] = rndcizgi[3, 2]; new_lines[rndxmainden + 1, rndymainden] = rndcizgi[3, 2]; }
+                if (rndcizgi[3, 4]) { lines[rndxmainden + 1, rndymainden + 2] = rndcizgi[3, 4]; new_lines[rndxmainden + 1, rndymainden + 2] = rndcizgi[3, 4]; }
 
             }
-            Console.ReadLine();
 
 
 
@@ -225,7 +255,7 @@ class Squares
                     connectedlik[i, j] = 0;
                 }
             }
-            for (int i = 0; i < 3 - countstage3; i++) 
+            for (int i = 0; i < 3 - countstage3; i++)
             {
                 do
                 {
@@ -234,7 +264,7 @@ class Squares
                 } while ((rndcizgix % 2 == rndcizgiy % 2) || rndcizgi[rndcizgix, rndcizgiy] == true);
                 if (rndcizgix % 2 == 0 && rndcizgiy % 2 != 0)
                 {
-                    rndcizgi[rndcizgix, rndcizgiy] = true; 
+                    rndcizgi[rndcizgix, rndcizgiy] = true;
                     connectedlik[rndcizgix, rndcizgiy - 1] = 1;
                     connectedlik[rndcizgix, rndcizgiy + 1] = 1;
 
@@ -247,7 +277,7 @@ class Squares
                 }
             }
 
-            for (int i = 0; i < rndcizgi.GetLength(0); i += 2) 
+            for (int i = 0; i < rndcizgi.GetLength(0); i += 2)
             {
                 for (int j = 0; j < rndcizgi.GetLength(1); j += 2)
                 {
@@ -259,7 +289,8 @@ class Squares
 
 
                 besebestabloyazdırma();
-                Console.Clear();
+                hehe = 1;
+                abc += 11;
                 while (!(connectedlik[0, 0] == 1 || connectedlik[0, 2] == 1 || connectedlik[0, 4] == 1))
                 {
                     for (int i = 0; i <= rndcizgi.GetLength(0) - 1; i += 2)
@@ -299,7 +330,8 @@ class Squares
 
                 }
                 besebestabloyazdırma();
-                Console.Clear();
+                hehe = 0;
+                abc += 11;
                 karsilastirma();
 
                 countstage3++;
@@ -311,13 +343,13 @@ class Squares
         }
 
 
-
-
+        besebessilme();
+        OwnershipTag(ref ownerless_squares, lines, computer_ownership, player_ownership);
 
     }
 
-    
-        static void OwnershipTag(ref bool[,] whose_ownership, bool[,] lines_array, bool[,] check_array, bool[,] check_array2)
+
+static void OwnershipTag(ref bool[,] whose_ownership, bool[,] lines_array, bool[,] check_array, bool[,] check_array2)
     {
         //       To check if the move has formed a square, write their array
         //        instead of "whose_ownership"
@@ -1026,8 +1058,8 @@ class Squares
         PrintAll();
         Stage1(lines, ref player_ownership, ref ownerless_squares);
 
-        Stage3Placing();
-        Console.ReadLine();
+        Discretestage3();//Stage3Placing();
+
         OwnershipTag(ref player_ownership, lines, ownerless_squares, computer_ownership);
         PrintAll();
 
