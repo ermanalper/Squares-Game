@@ -840,7 +840,65 @@ class Squares
 
     }
 
+    static void Stage2()
+    {
+        Console.SetCursorPosition(0, 20);
+        Console.WriteLine("Stage 2: Placing an Extra Line - Begin!");
 
+        Console.SetCursorPosition(34, 1);
+        Console.Write("Your Turn");
+        Console.SetCursorPosition(34, 2);
+        Console.Write("Stage 2");
+        Console.SetCursorPosition(0, 21);
+        Console.Write("Press TAB to skip Stage 2");
+
+
+        bool squareFormed = false;
+        if (!AddNewLineWithCursor(ref lines)) // Adding a new line
+        {
+            Console.SetCursorPosition(0, 19);
+            Console.WriteLine("Stage 2 is skipped.");
+            Console.Write("Press enter to continue...");
+            Console.ReadLine();
+            return;
+        }
+
+        for (int row = 1; row <= 17; row += 2) // Check all squares on the board
+        {
+            for (int col = 0; col <= 30; col += 2)
+            {
+                if (lines[row, col] && lines[row, col + 2] &&
+                    lines[row - 1, col + 1] && lines[row + 1, col + 1])
+                {
+                    int squareRow = (row - 1) / 2;
+                    int squareCol = col / 2;
+
+                    // If already owned, continue
+                    if (player_ownership[squareRow, squareCol] || computer_ownership[squareRow, squareCol] || ownerless_squares[squareRow, squareCol])
+                        continue;
+
+
+                    ownerless_squares[squareRow, squareCol] = true; // Mark as ownerless
+                    squareFormed = true;
+                }
+            }
+        }
+
+
+        PrintAll(); // Updating the board         
+        Console.SetCursorPosition(0, 19);
+        if (!squareFormed)
+        {
+            Console.WriteLine("No square was formed. Stage 2 ends.");
+        }
+        else
+        {
+            Console.WriteLine("A square has formed and marked as ownerless. Stage 2 ends.");
+        }
+
+
+        Console.Write("Press enter to continue...");
+    }
 
 
     static byte IsTheAreaSquareable(int i, int j, bool[,] lines_array) // is the area squareable just by adding 1 new line
@@ -1264,6 +1322,7 @@ class Squares
 
 
         */
+        Stage2();
         Console.ReadLine();
 
 
