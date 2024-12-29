@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq.Expressions;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 class Squares
 {
@@ -487,6 +489,8 @@ class Squares
     //                         hence OwnershipTag (because you muse use OwnershipTag 
     //                         before using PrintAll), to print the board
     //     
+
+    // !!!! IF THE PLAYER SKIPS THIS (TAB) THIS RETURNS FALSE, ELSE (IF PLAYER CHOOSES TO ADD A NEW LINE) TRUE
     {
 
         ConsoleKeyInfo cki;
@@ -615,8 +619,8 @@ class Squares
 
     }
 
-    static int[] DidExtraSquareOccurAtFirst(int squareRow, int squareCol)
-    {
+    static int[] DidExtraSquareOccurAtFirst(int squareRow, int squareCol)  // if any extra square is formed, this function returns the coordinates of one
+    {                                                               // Use: Stage 1 (if any extra square forms in the first move, choose one as the starting point)
         for (int i = 0; i < 9; i++)
             for (int j = 0; j < 16; j++)
                 if (IsTheAreaSquareable(i, j, lines) == 4 && !player_ownership[i, j] && !computer_ownership[i, j] && !ownerless_squares[i, j]
@@ -646,7 +650,7 @@ class Squares
             Console.Write("Press TAB to skip Stage 1");
 
             // add a new line
-            if (!AddNewLineWithCursor(ref lines))
+            if (!AddNewLineWithCursor(ref lines))   // the player may skip Stage 1 to avoid any irregular square penalties
             {
                 Console.SetCursorPosition(0, 19);
                 Console.WriteLine("Stage 1 is skipped.                      ");
@@ -683,7 +687,7 @@ class Squares
                         // first square
                         if (lastSquareRow == -1)
                         {
-                            if (DidExtraSquareOccurAtFirst(squareRow, squareCol) != null)
+                            if (DidExtraSquareOccurAtFirst(squareRow, squareCol) != null) // if any extra square if formed in the first move, the player must choose one as their starting point
                             {
                                 int unchosenRow = DidExtraSquareOccurAtFirst(squareRow, squareCol)[0];
                                 int unchosenCol = DidExtraSquareOccurAtFirst(squareRow, squareCol)[1];
@@ -857,9 +861,11 @@ class Squares
         if (!AddNewLineWithCursor(ref lines)) // Adding a new line
         {
             Console.SetCursorPosition(0, 19);
-            Console.WriteLine("Stage 2 is skipped.");
-            Console.Write("Press enter to continue...");
-            Console.ReadLine();
+            Console.WriteLine("Stage 2 is skipped.                                         ");
+            Console.WriteLine("Press enter to continue...                   ");
+            Console.Write("                                                  ");
+
+            // Console.ReadLine();
             return;
         }
 
@@ -901,12 +907,12 @@ class Squares
     }
 
 
-    static byte IsTheAreaSquareable(int i, int j, bool[,] lines_array) // is the area squareable just by adding 1 new line
+    static sbyte IsTheAreaSquareable(int i, int j, bool[,] lines_array) // is the area squareable just by adding 1 new line
     {                               // !! PARAMETERS ARE i, j OF OWNERSHIP ARRAYS (not lines array)
                                     // ownership arrays are [9, 16], where the lines array is [19, 33].
-                                    // the function returns true or false by calculating the corresponding i, j
-                                    // point in the lines array
-        byte counter = 0;
+                                    // the function returns 3 if the area is squareable, 4 if it is already a square
+        if (i < 0 || i > 8 || j < 0 || j > 15) return -1; // if the area is out of the board
+        sbyte counter = 0;
         if (lines_array[(2 * i) + 1, 2 * j]) counter++;
         if (lines_array[2 * i, (2 * j) + 1]) counter++;
         if (lines_array[(2 * i) + 1, (2 * j) + 2]) counter++;
@@ -1219,6 +1225,9 @@ class Squares
         // THIS IS A RECURSIVE FUNCTION THAT DISPLAYS THE COMPUTER'S MOVES ON THE RIGHT SIDE OF THE SCREEN
         // programcounter is the NEXT INDEX (in the directions array) of the direction that will be displayed
         SquareTheArea(ref lines, i, j, true);
+        computerScore++;
+        Console.SetCursorPosition(50, 5);
+        Console.Write(computerScore);
         if (programcounter == 0)
         {
             Console.SetCursorPosition(34, 12);
@@ -1242,16 +1251,16 @@ class Squares
         Console.SetCursorPosition(51 + prevLength, 13);
         prevLength += display.Length;
         Console.Write(display);       // prevLength is the direction's length, so that the next direction will be displayed
-                                      // with the proper CursorPosition (space between the directions (RIGHT, LEFT etc.) will be equal)
+                                      // with the proper CursorPosition (spaces between the directions (RIGHT, LEFT etc.) will be equal)
 
 
 
 
         Console.ReadLine();
 
-        if (directions[programcounter] == 0) return;
+        if (directions[programcounter] == 0) return; // if the moves are over, stop the recursive function
 
-        else if (directions[programcounter] == 1) DisplayComputerMoves(i - 1, j, directions, programcounter + 1, prevLength);
+        else if (directions[programcounter] == 1) DisplayComputerMoves(i - 1, j, directions, programcounter + 1, prevLength); // Play the next move
         else if (directions[programcounter] == 2) DisplayComputerMoves(i, j + 1, directions, programcounter + 1, prevLength);
         else if (directions[programcounter] == 3) DisplayComputerMoves(i + 1, j, directions, programcounter + 1, prevLength);
         else if (directions[programcounter] == 4) DisplayComputerMoves(i, j - 1, directions, programcounter + 1, prevLength);
@@ -1265,18 +1274,152 @@ class Squares
         Console.Write("Computer's Turn");
         Console.SetCursorPosition(34, 2);
         Console.Write("Stage 1");
-        byte[] theBestDirections = new byte[143]; // a total of 144 boards on the board, so max 143 directions
+        byte[] theBestDirections = new byte[143]; // a total of 144 areas on the board, so max 143 directions
                                                   // can be choosen at a time. (it will probably never happen...) 
         int[] theBestStartingPoint = new int[2];
         ComputerAIStage1(difficulty, ref theBestDirections, ref theBestStartingPoint);
         Console.SetCursorPosition(0, 23);
-        foreach (byte dir in theBestDirections) Console.Write(dir + " ");
-        DisplayComputerMoves(theBestStartingPoint[0], theBestStartingPoint[1], theBestDirections, 0, 0);
+        DisplayComputerMoves(theBestStartingPoint[0], theBestStartingPoint[1], theBestDirections, 0, 0); // This function not only displays the moves,
+                                                                                                         // but also updates the lines in the 'lines' array
+    }
+
+    static int[] FollowThePath(ref bool[,] imaginaryLines, int i, int j, List<byte> path) 
+    {
+        int x = i; 
+        int y = j;    
 
 
+        for(int k = 0; k < path.Count; k++)   // follows the path and returns the ending point
+        {
+            switch (path[k])
+            {
+                case 1: // up
+                    x--;
+                    break;
+                case 2: // right
+                    y++;
+                    break;
+                case 3: // down
+                    x++;
+                    break;
+                case 4: // left
+                    y--;
+                    break;
+            }
+            SquareTheArea(ref imaginaryLines, x, y, false);
+        }
+        return [x, y];
+    }
+    static byte[] TheBestPathFromTheStartingPoint(int i, int j) // (i, j) is the starting point on the board
+    {
+        List<List<byte>> listOfAllPaths = new List<List<byte>>();
 
+        if (IsTheAreaSquareable(i, j + 1, lines) == 3)
+        {
+            listOfAllPaths.Add(new List<byte> { 2 }); // right
+        }
+        if (IsTheAreaSquareable(i, j - 1, lines) == 3)
+        {
+            listOfAllPaths.Add(new List<byte> { 4 }); // left
+        }
+        if (IsTheAreaSquareable(i - 1, j, lines) == 3)
+        {
+            listOfAllPaths.Add(new List<byte> { 1 }); // up
+        }
+        if (IsTheAreaSquareable(i + 1, j, lines) == 3)
+        {
+            listOfAllPaths.Add(new List<byte> { 2 }); // down
+        }
+        if (listOfAllPaths.Count == 0) return new byte[0]; // if there is no path to follow, return an empty array
 
+        // now we have added the paths of length 1
 
+        for (int n = 0; n < listOfAllPaths.Count; n++)
+        {
+            bool[,] imaginaryLines = (bool[,])lines.Clone();
+            SquareTheArea(ref imaginaryLines, i, j, false); // square the starting area
+            int[] terminalVertex = FollowThePath(ref imaginaryLines, i, j, listOfAllPaths[n]);
+            int x = terminalVertex[0];
+            int y = terminalVertex[1];
+
+            if (IsTheAreaSquareable(x, y + 1, imaginaryLines) == 3)
+            {
+                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);
+                clonePath.Add(2);
+                listOfAllPaths.Add(clonePath); // right
+            }
+            if (IsTheAreaSquareable(x, y - 1, imaginaryLines) == 3)
+            {
+                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);
+                clonePath.Add(4);
+                listOfAllPaths.Add(clonePath); // left
+            }
+            if (IsTheAreaSquareable(x - 1, y, imaginaryLines) == 3)
+            {
+                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);
+                clonePath.Add(1);
+                listOfAllPaths.Add(clonePath); // up
+            }
+            if (IsTheAreaSquareable(x + 1, y, imaginaryLines) == 3)
+            {
+                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);
+                clonePath.Add(3);
+                listOfAllPaths.Add(clonePath); // down
+            }
+        }
+
+        // now we have all the paths starting from (i, j)
+
+        byte[] bestDirections = new byte[listOfAllPaths[listOfAllPaths.Count - 1].Count];
+
+        int length = listOfAllPaths[listOfAllPaths.Count - 1].Count;
+
+        for (int k = 0; k < length; k++)
+        {
+            bestDirections[k] = listOfAllPaths[listOfAllPaths.Count - 1][k];
+        }
+        return bestDirections; // returns the best path from the given starting point
+
+    }
+
+    static void ComputerAIExtreme(ref byte[] bestPath, ref int[] startingPoint) // returns the best path and the starting point on the board
+    {
+        int threshold = 0;
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 16; j++)
+            {
+                if (IsTheAreaSquareable(i, j, lines) != 3) continue;
+                // now we have found a starting point
+                byte[] bestPathStartingFromThatPoint = TheBestPathFromTheStartingPoint(i, j);
+                if (bestPathStartingFromThatPoint.Length > threshold)
+                {
+                    threshold = bestPathStartingFromThatPoint.Length;
+                    for (int k = 0; k < bestPathStartingFromThatPoint.Length; k++)
+                    {
+                        bestPath[k] = bestPathStartingFromThatPoint[k]; // save the best path
+
+                    }
+                    startingPoint[0] = i;
+                    startingPoint[1] = j;
+                }
+            }
+       
+    }
+
+    static void ComputerMoveExtreme()
+    {
+        PrintAll();
+        Console.SetCursorPosition(34, 1);
+        Console.Write("Computer's Turn");
+        Console.SetCursorPosition(34, 2);
+        Console.Write("Stage 1");
+        byte[] theBestDirections = new byte[143]; // a total of 144 areas on the board, so max 143 directions
+                                                  // can be choosen at a time. (it will probably never happen...) 
+        int[] theBestStartingPoint = new int[2];
+        ComputerAIExtreme(ref theBestDirections, ref theBestStartingPoint);
+        Console.SetCursorPosition(0, 23);
+        DisplayComputerMoves(theBestStartingPoint[0], theBestStartingPoint[1], theBestDirections, 0, 0); // This function not only displays the moves,
+                                                                                                         // but also updates the lines in the 'lines' array
     }
 
 
@@ -1326,8 +1469,10 @@ class Squares
         Console.ReadLine();
 
 
-        //   ComputerMove(50000);
-        ComputerMove(500);
+        //ComputerMove(50000);
+
+        ComputerMoveExtreme();
+
 
 
 
