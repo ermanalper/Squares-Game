@@ -4,6 +4,9 @@ using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 class Squares
 {
+    static bool rulesShown = false;
+    static int difficultyLevel = -1;
+    static bool extremeMode = false;
     static Random random = new Random();
     static int round = 1;
     static int cursor_x = 2, cursor_y = 1;
@@ -51,8 +54,34 @@ class Squares
             }
             Console.WriteLine();
         }
+        for (int i = 0; i < new_lines.GetLength(0); i++)
+            for (int j = 0; j < new_lines.GetLength(1); j++)
+            {
+                new_lines[i, j] = false; // reset new lines ( because they are not 'new' anymore) :)
+            }
     }
+    static void ResetLineColors()
+    {
+        for (int row = 0; row < 19; row++)
+        {
+            for (int column = 0; column < 33; column++)
+            {
+                Console.SetCursorPosition(column, row);
+                if (row % 2 == 0 && column % 2 == 0) // (even, even) point
+                    Console.Write("+");
+                //   else if (row * column % 2 == 1) // (odd, odd) point
+                //     Console.Write(" ");
 
+                else if (lines[row, column] == true)
+                {
+                    if (row % 2 == 0) Console.Write("-");
+                    else Console.Write("|");
+                }
+                //  else Console.Write(" ");
+            }
+            //  Console.WriteLine();
+        }
+    }
     static bool[,] RandomizeInitialBoard(bool[,] lines_array) // This function switches random 90 bools to "true"
                                                               //                                                         in order to randomize the initial board
     {
@@ -85,6 +114,9 @@ class Squares
 
     static void Discretestage3()
     {
+        Console.SetCursorPosition(0, 19);
+        Console.WriteLine("                                                                                                ");
+        Console.Write("Press enter to continue                                                                           ");
         bool[,] saveLines = (bool[,])lines.Clone();
         Console.SetCursorPosition(34, 1);
         Console.Write("                ");
@@ -164,57 +196,62 @@ class Squares
                 if (lines[rndxmainden - 1, rndymainden - 2] == true && rndcizgi[1, 0] == true)
                 {
                     c = true;
+                    count++;
                 }
-                if (lines[rndxmainden - 1, rndymainden] == true && rndcizgi[1, 2] == true)
+                else if (lines[rndxmainden - 1, rndymainden] == true && rndcizgi[1, 2] == true)
                 {
                     c = true;
+                    count++;
                 }
-                if (lines[rndxmainden - 1, rndymainden + 2] == true && rndcizgi[1, 4] == true)
+                else if (lines[rndxmainden - 1, rndymainden + 2] == true && rndcizgi[1, 4] == true)
                 {
                     c = true;
+                    count++;
                 }
-                if (lines[rndxmainden + 1, rndymainden - 2] == true && rndcizgi[3, 0] == true)
+                else if (lines[rndxmainden + 1, rndymainden - 2] == true && rndcizgi[3, 0] == true)
                 {
                     c = true;
-                }
-                if (lines[rndxmainden + 1, rndymainden] == true && rndcizgi[3, 2] == true)
-                {
+                    count++;
 
+                }
+                else if (lines[rndxmainden + 1, rndymainden] == true && rndcizgi[3, 2] == true)
+                {
+                    count++;
                     c = true;
                 }
-                if (lines[rndxmainden + 1, rndymainden + 2] == true && rndcizgi[3, 4] == true)
+                else if (lines[rndxmainden + 1, rndymainden + 2] == true && rndcizgi[3, 4] == true)
                 {
-
+                    count++;
                     c = true;
                 }
-                if (lines[rndxmainden - 2, rndymainden - 1] == true && rndcizgi[0, 1] == true)
+                else if (lines[rndxmainden - 2, rndymainden - 1] == true && rndcizgi[0, 1] == true)
                 {
-
+                    count++;
                     c = true;
                 }
-                if (lines[rndxmainden, rndymainden - 1] == true && rndcizgi[2, 1] == true)
+                else if (lines[rndxmainden, rndymainden - 1] == true && rndcizgi[2, 1] == true)
                 {
-
+                    count++;
                     c = true;
                 }
-                if (lines[rndxmainden + 2, rndymainden - 1] == true && rndcizgi[4, 1] == true)
+                else if (lines[rndxmainden + 2, rndymainden - 1] == true && rndcizgi[4, 1] == true)
                 {
-
+                    count++;
                     c = true;
                 }
-                if (lines[rndxmainden - 2, rndymainden + 1] == true && rndcizgi[0, 3] == true)
+                else if (lines[rndxmainden - 2, rndymainden + 1] == true && rndcizgi[0, 3] == true)
                 {
-
+                    count++;
                     c = true;
                 }
-                if (lines[rndxmainden, rndymainden + 1] == true && rndcizgi[2, 2] == true)
+                else if (lines[rndxmainden, rndymainden + 1] == true && rndcizgi[2, 2] == true)
                 {
-
+                    count++;
                     c = true;
                 }
-                if (lines[rndxmainden + 2, rndymainden + 1] == true && rndcizgi[4, 3] == true)
+                else if (lines[rndxmainden + 2, rndymainden + 1] == true && rndcizgi[4, 3] == true)
                 {
-
+                    count++;
                     c = true;
                 }
 
@@ -360,10 +397,10 @@ class Squares
         }
         Console.SetCursorPosition(34, 9);
         Console.Write($"Ownerless squares: {ownerlessCount}  ");
-        
+
         for (int i = 0; i < 19; i++)
             for (int j = 0; j < 33; j++)
-            { 
+            {
                 if (lines[i, j] && !saveLines[i, j])
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
@@ -375,7 +412,7 @@ class Squares
             }
 
 
-        
+
         //LinePrint(lines);
     }
 
@@ -445,13 +482,19 @@ class Squares
                         switch (mode)
                         {
                             case 0: // Mode: Ownerless (:)
+                                Console.ForegroundColor = ConsoleColor.Green;
                                 Console.Write(":");
+                                Console.ForegroundColor = ConsoleColor.White;
                                 break;
                             case 1: // Mode: Player (P)
+                                Console.ForegroundColor = ConsoleColor.Blue;
                                 Console.Write("P");
+                                Console.ForegroundColor = ConsoleColor.White;
                                 break;
                             case 2: // Mode: Computer (C)
+                                Console.ForegroundColor = ConsoleColor.Red;
                                 Console.Write("C");
+                                Console.ForegroundColor = ConsoleColor.White;
                                 break;
                         }
                     }
@@ -489,6 +532,23 @@ class Squares
         Console.Write($"Your score: {playerScore}");
         Console.SetCursorPosition(34, 5);
         Console.Write($"Computer score: {computerScore}");
+        Console.SetCursorPosition(34, 15);
+        switch (difficultyLevel)
+        {
+            case 5:
+                Console.Write("Difficulty: Easy");
+                break;
+            case 50:
+                Console.Write("Difficulty: Medium");
+                break;
+            case 500:
+                Console.Write("Difficulty: Hard");
+                break;
+            default:
+                Console.Write("Difficulty: Extreme");
+                break;
+        }
+
         Console.SetCursorPosition(0, 19);
 
         int pCount = 0;
@@ -506,8 +566,8 @@ class Squares
         foreach (bool s in computer_ownership) if (s == true) cCount++;
         Console.SetCursorPosition(34, 8);
         Console.Write($"Computer squares: {cCount}");
-        
-        
+
+
     }
 
     static bool AddNewLineWithCursor(ref bool[,] lines_array) // Adds a new line wherever the
@@ -525,9 +585,15 @@ class Squares
 
         ConsoleKeyInfo cki;
         Console.SetCursorPosition(cursor_x, cursor_y);
-        if (cursor_x % 2 == 0)
-            Console.Write("|");
-        else Console.Write("-");
+        if (!lines_array[cursor_y, cursor_x])
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            if (cursor_x % 2 == 0)
+                Console.Write("|");
+            else Console.Write("-");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
         bool inserted = false;
         do
         {
@@ -630,8 +696,14 @@ class Squares
                         Console.Write(" ");
                     }
                     Console.SetCursorPosition(cursor_x, cursor_y);
-                    if (cursor_x % 2 == 0) Console.Write("|");
-                    else Console.Write("-");
+                    if (!lines_array[cursor_y, cursor_x])
+                    {
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        if (cursor_x % 2 == 0) Console.Write("|");
+                        else Console.Write("-");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+
                 }
 
             }
@@ -661,6 +733,7 @@ class Squares
 
     static void Stage1(bool[,] lines, ref bool[,] player_ownership, ref bool[,] ownerless_squares)
     {
+
         //PrintAll();
         Console.SetCursorPosition(0, 19);
         Console.WriteLine("Stage 1: Squaring - Begin!                                                             ");
@@ -673,20 +746,21 @@ class Squares
         int dispCol = 0; //unassigned
         while (continueSquaring)
         {
+
             Console.SetCursorPosition(34, 1);
             Console.Write("Your Turn");
             Console.SetCursorPosition(34, 2);
             Console.Write("Stage 1");
             Console.SetCursorPosition(0, 20);
-            Console.Write("Press TAB to skip Stage 1                             ");
+            Console.Write("Press TAB to skip Stage 1                                                                                                                            ");
 
             // add a new line
             if (!AddNewLineWithCursor(ref lines))   // the player may skip Stage 1 to avoid any irregular square penalties
             {
                 Console.SetCursorPosition(0, 19);
-                Console.WriteLine("Stage 1 is skipped.                      ");
+                Console.WriteLine("Stage 1 is skipped.                                                                        ");
                 Console.Write("Press enter to continue...                     ");
-                Console.ReadLine();
+                //Console.ReadLine();
                 return;
             }
 
@@ -729,7 +803,9 @@ class Squares
                                 Console.Write("                                                                                             ");
                                 Console.SetCursorPosition(col + 1, row);
 
+                                Console.ForegroundColor = ConsoleColor.Blue;
                                 Console.Write("X");
+                                Console.ForegroundColor = ConsoleColor.White;
                                 ConsoleKeyInfo cki;
                                 bool loop = true;
                                 int cursor_x = col + 1, cursor_y = row;
@@ -746,7 +822,9 @@ class Squares
                                                     Console.SetCursorPosition(cursor_x, cursor_y);
                                                     Console.Write(" ");
                                                     Console.SetCursorPosition(unchosenCol, row);
+                                                    Console.ForegroundColor = ConsoleColor.Blue;
                                                     Console.Write("X");
+                                                    Console.ForegroundColor = ConsoleColor.White;
                                                     (cursor_x, unchosenCol) = (unchosenCol, cursor_x);
                                                 }
                                                 break;
@@ -756,7 +834,9 @@ class Squares
                                                     Console.SetCursorPosition(cursor_x, cursor_y);
                                                     Console.Write(" ");
                                                     Console.SetCursorPosition(unchosenCol, row);
+                                                    Console.ForegroundColor = ConsoleColor.Blue;
                                                     Console.Write("X");
+                                                    Console.ForegroundColor = ConsoleColor.White;
                                                     (cursor_x, unchosenCol) = (unchosenCol, cursor_x);
                                                 }
                                                 break;
@@ -766,7 +846,9 @@ class Squares
                                                     Console.SetCursorPosition(cursor_x, cursor_y);
                                                     Console.Write(" ");
                                                     Console.SetCursorPosition(col + 1, unchosenRow);
+                                                    Console.ForegroundColor = ConsoleColor.Blue;
                                                     Console.Write("X");
+                                                    Console.ForegroundColor = ConsoleColor.White;
                                                     (cursor_y, unchosenRow) = (unchosenRow, cursor_y);
                                                 }
                                                 break;
@@ -776,7 +858,9 @@ class Squares
                                                     Console.SetCursorPosition(cursor_x, cursor_y);
                                                     Console.Write(" ");
                                                     Console.SetCursorPosition(col + 1, unchosenRow);
+                                                    Console.ForegroundColor = ConsoleColor.Blue;
                                                     Console.Write("X");
+                                                    Console.ForegroundColor = ConsoleColor.White;
                                                     (cursor_y, unchosenRow) = (unchosenRow, cursor_y);
                                                 }
                                                 break;
@@ -800,24 +884,51 @@ class Squares
 
 
 
-
+                            //OwnershipTag(ref player_ownership, lines, ownerless_squares, computer_ownership);  
                             player_ownership[squareRow, squareCol] = true;
 
 
-                            lines[(2 * squareRow) + 1, 2 * squareCol] = true;
-                            lines[(2 * squareRow), (2 * squareCol) + 1] = true;
-                            lines[(2 * squareRow) + 1, (2 * squareCol) + 2] = true;
-                            lines[(2 * squareRow) + 2, (2 * squareCol) + 1] = true;
-                            Console.SetCursorPosition(2 * squareCol, (2 * squareRow) + 1);
-                            Console.Write("|");
-                            Console.SetCursorPosition((2 * squareCol) + 1, 2 * squareRow);
-                            Console.Write("-");
-                            Console.SetCursorPosition((2 * squareCol) + 2, (2 * squareRow) + 1);
-                            Console.Write("|");
-                            Console.SetCursorPosition((2 * squareCol) + 1, (2 * squareRow) + 2);
-                            Console.Write("-");
-                            Console.SetCursorPosition((2 * squareCol) + 1, (2 * squareRow) + 1);
-                            OwnershipTag(ref ownerless_squares, lines, player_ownership, computer_ownership);
+                            if (!lines[(2 * squareRow) + 1, 2 * squareCol])     // square the starting point, hence the neighbour ownerless square (2 squares occured at the first move)
+                            {
+                                Console.SetCursorPosition(2 * squareCol, (2 * squareRow) + 1);
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.Write("|");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                lines[(2 * squareRow) + 1, 2 * squareCol] = true;
+                            }
+
+                            if (!lines[(2 * squareRow), (2 * squareCol) + 1])
+                            {
+                                Console.SetCursorPosition((2 * squareCol) + 1, 2 * squareRow);
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.Write("-");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                lines[(2 * squareRow), (2 * squareCol) + 1] = true;
+                            }
+
+                            if (!lines[(2 * squareRow) + 1, (2 * squareCol) + 2])
+                            {
+                                Console.SetCursorPosition((2 * squareCol) + 2, (2 * squareRow) + 1);
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.Write("|");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                lines[(2 * squareRow) + 1, (2 * squareCol) + 2] = true;
+                            }
+
+                            if (!lines[(2 * squareRow) + 2, (2 * squareCol) + 1])
+                            {
+                                Console.SetCursorPosition((2 * squareCol) + 1, (2 * squareRow) + 2);
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.Write("-");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                lines[(2 * squareRow) + 2, (2 * squareCol) + 1] = true;
+                            }
+
+
+
+
+
+                            OwnershipTag(ref ownerless_squares, lines, player_ownership, computer_ownership); // mark the neighbour ownerless square
                             first = true;
 
                             lastSquareRow = squareRow;
@@ -838,7 +949,8 @@ class Squares
                             if (isNeighbor)
                             {
                                 player_ownership[squareRow, squareCol] = true;
-                              
+
+                                OwnershipTag(ref ownerless_squares, lines, player_ownership, computer_ownership); // if any extra square is formed, mark them as ownerless 
 
                                 lastSquareRow = squareRow;
                                 lastSquareCol = squareCol;
@@ -850,15 +962,14 @@ class Squares
 
                                 ownerless_squares[squareRow, squareCol] = true;
 
-                                playerScore -= 5;
+
                                 irregularFormed = true;
                                 irrRow = squareRow;
                                 irrCol = squareCol;
 
                             }
-                            OwnershipTag(ref ownerless_squares, lines, player_ownership, computer_ownership);
-                            //  --> if an extra square is formed, mark it as ownerless
-                            PrintOwnership(0, ownerless_squares);
+                            // 
+
                         }
                     }
                 }
@@ -876,18 +987,24 @@ class Squares
             else playerScore++;
             //PrintAll();
             PrintOwnership(1, player_ownership);
+
             PrintOwnership(0, ownerless_squares);
             Console.SetCursorPosition(0, 19);
             if (first)
             {
-                Console.WriteLine($"First square formed at ({dispRow}, {dispCol})!                                       ");
+                Console.WriteLine($"First square formed at ({dispRow}, {dispCol})!                                                                                    ");
                 first = false;
             }
-            else if (isNeighbor) Console.WriteLine($"Square formed at ({dispRow}, {dispCol})!            ");
+            else if (isNeighbor) Console.WriteLine($"Square formed at ({dispRow}, {dispCol})!                                                            ");
             if (!squareFormed)
             {
-                Console.WriteLine("No more squares can be formed. Stage 1 ends.                           ");
-                if (irregularFormed) Console.WriteLine($"Irregular square at ({dispRow}, {dispCol})! -5 points.");
+                Console.WriteLine("No more squares can be formed. Stage 1 ends.                                                         ");
+                Console.Write("Press enter to continue");
+                if (irregularFormed)
+                {
+                    Console.WriteLine($"Irregular square at ({dispRow}, {dispCol})! -5 points.");
+                    playerScore -= 5;
+                }
                 else Console.WriteLine("                                                                                            ");
             }
             int pCount = 0;
@@ -901,7 +1018,7 @@ class Squares
             Console.Write($"Ownerless squares: {oCount}");
 
             Console.SetCursorPosition(0, 19);
-            
+
             Console.SetCursorPosition(34, 4);
             Console.Write($"Your score: {playerScore}  ");
 
@@ -915,7 +1032,7 @@ class Squares
     static void Stage2()
     {
         Console.SetCursorPosition(0, 19);
-        Console.WriteLine("Stage 2: Placing an Extra Line - Begin!                   ");
+        Console.WriteLine("Stage 2: Placing an Extra Line - Begin!                                           ");
 
         Console.SetCursorPosition(34, 1);
         Console.Write("Your Turn              ");
@@ -1014,14 +1131,15 @@ class Squares
     static void SquareTheArea(ref bool[,] lines_array, int i, int j, bool mode)// this makes a square in the selected area
     {                                                   // For lines_array:
                                                         // if ComputerAIStage1 function, use "imaginaryLines"
-                                                    // if DisplayComputerMoves function, use "lines"
-                                                    //     ONLY USE FOR COMPUTER MOVE!!
-        
+                                                        // if DisplayComputerMoves function, use "lines"
+                                                        //     ONLY USE FOR COMPUTER MOVE!!
+
         // MODE: IF YOU ARE DISPLAYING AFTER SQUARING, USE true
         // e.g. if lines_array == imaginaryLines: false
         //      if lines_array == 'lines' (that is the array we display on the board) : true
         if (mode)
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             if (!lines_array[(2 * i) + 1, 2 * j])
             {
                 Console.SetCursorPosition(2 * j, (2 * i) + 1);
@@ -1042,7 +1160,8 @@ class Squares
                 Console.SetCursorPosition((2 * j) + 1, (2 * i) + 2);
                 Console.Write("-");
             }
-          //  Console.SetCursorPosition((2 * j) + 1, (2 * i) + 1);
+            //  Console.SetCursorPosition((2 * j) + 1, (2 * i) + 1);
+            Console.ForegroundColor = ConsoleColor.White;
 
             computer_ownership[i, j] = true;
             OwnershipTag(ref ownerless_squares, lines, player_ownership, computer_ownership); // if any extra square occured (2 squares at the same time)
@@ -1356,9 +1475,20 @@ class Squares
         Console.Write(display);       // prevLength is the direction's length, so that the next direction will be displayed
                                       // with the proper CursorPosition (spaces between the directions (RIGHT, LEFT etc.) will be equal)
 
-
+        bool[,] saveOwnerless = (bool[,])ownerless_squares.Clone();
         OwnershipTag(ref ownerless_squares, lines, player_ownership, computer_ownership);
-        PrintOwnership(0, ownerless_squares);
+        for (int m = 0; m < 9; m++)
+            for (int n = 0; n < 16; n++)
+            {
+                if (saveOwnerless[m, n] != ownerless_squares[m, n])
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.SetCursorPosition((2 * n) + 1, (2 * m) + 1);
+                    Console.Write(":");   // only reprint the necessary squares (better visuals, performance)
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+            }
+
         int ownerlessCount = 0;
         foreach (bool b in ownerless_squares)
         {
@@ -1368,9 +1498,14 @@ class Squares
         Console.Write($"Ownerless squares: {ownerlessCount}  ");
 
 
-        Console.ReadLine();
+        Thread.Sleep(700);
 
-        if (directions[programcounter] == 0) return; // if the moves are over, stop the recursive function
+        if (directions[programcounter] == 0)
+        {
+            Console.SetCursorPosition(0, 20);
+            Console.Write("Press enter to continue...                                                               ");
+            return;
+        }// if the moves are over, stop the recursive function
 
         else if (directions[programcounter] == 1) DisplayComputerMoves(i - 1, j, directions, programcounter + 1, prevLength); // Play the next move
         else if (directions[programcounter] == 2) DisplayComputerMoves(i, j + 1, directions, programcounter + 1, prevLength);
@@ -1381,7 +1516,7 @@ class Squares
 
     static void ComputerMove(int difficulty)
     {
-      //  PrintAll();
+        //  PrintAll();
         Console.SetCursorPosition(34, 1);
         Console.Write("Computer's Turn");
         Console.SetCursorPosition(34, 2);
@@ -1393,7 +1528,7 @@ class Squares
         Console.SetCursorPosition(0, 23);
         DisplayComputerMoves(theBestStartingPoint[0], theBestStartingPoint[1], theBestDirections, 0, 0); // This function not only displays the moves,
                                                                                                          // but also updates the lines in the 'lines' array
-        
+
     }
 
     static int[] FollowThePath(ref bool[,] imaginaryLines, int i, int j, List<byte> path)
@@ -1418,11 +1553,14 @@ class Squares
                 case 4: // left
                     y--;
                     break;
+                case 0:
+                    break;
             }
             SquareTheArea(ref imaginaryLines, x, y, false);
         }
         return [x, y];
     }
+
     static byte[] TheBestPathFromTheStartingPoint(int i, int j) // (i, j) is the starting point on the board
     {
         List<List<byte>> listOfAllPaths = new List<List<byte>>();
@@ -1446,7 +1584,7 @@ class Squares
         {
             listOfAllPaths.Add(new List<byte> { 3 }); // down
         }
-        if (listOfAllPaths.Count == 0) return new byte[0]; // if there is no path to follow, return an empty array
+        if (listOfAllPaths.Count == 0) return [0]; // if there is no path to follow, return 0 as direction
 
         // now we have added the paths of length 1
 
@@ -1524,7 +1662,7 @@ class Squares
 
     static void ComputerMoveExtreme()
     {
-       // PrintAll();
+        // PrintAll();
         Console.SetCursorPosition(34, 1);
         Console.Write("Computer's Turn");
         Console.SetCursorPosition(34, 2);
@@ -1553,43 +1691,250 @@ class Squares
         {
             if (s) counter++;
         }
+
+        int checkcounter = 0;
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 16; j++)        // count squares in 2 ways , if they are not equal, there occured an error in the development
+            {
+                if (IsTheAreaSquareable(i, j, lines) == 4) checkcounter++;
+            }
+        }
+        if (checkcounter != counter)
+        {
+            Console.Clear();
+            Console.WriteLine("ERROR: A bug has occured. The number of squares on the board is not correct."); // to make debugging easier
+            Console.ReadKey();
+            Environment.Exit(0);
+        }
         return counter;
     }
 
-    static void ComputerStage2()   // It finds the best path on the board, and squares the area in the middle of that path, so that the player cannot use the longest path
+    static void ComputerStage2()   // It finds the best path on the board, and squares somewhere in the middle of the path (might not be the exact middle, because it is not
+                                   //                                                                                   guaranteed to have lines on 3 sides),
+                                   //                                                                                   so that the player cannot use the longest path
 
     {
-        Console.SetCursorPosition(0, 19);
-        Console.Write("Computer stage 2 done");   // stage 2 yapılmadı şu anlık öylesine koydum
-        Console.ReadLine();
-        
-    }
 
-    static void Main()
-    {
-        Console.Clear();
+        Console.SetCursorPosition(34, 1);
+        Console.Write("Computer's Turn");
+        Console.SetCursorPosition(34, 2);
+        Console.Write("Stage 2");
+        Console.ForegroundColor = ConsoleColor.Red;
+        byte[] theBestDirections = new byte[143]; // a total of 144 areas on the board, so max 143 directions
+                                                  // can be choosen at a time. (it will probably never happen...) 
+        int[] theBestStartingPoint = new int[2];
+        ComputerAIStage1(500, ref theBestDirections, ref theBestStartingPoint);
 
-        Console.WriteLine("Select the difficulty level: ");
-        Console.WriteLine("1. Easy");
-        Console.WriteLine("2. Medium");
-        Console.WriteLine("3. Hard");
-        Console.WriteLine("4. Extreme");
-        Console.Write("Enter the number of the difficulty level: ");
-        string? difficulty = "";
-        do
+        int PathLength()
         {
-            difficulty = Console.ReadLine();
-        } while (!difficulty.Equals("1") && !difficulty.Equals("2") && !difficulty.Equals("3") && !difficulty.Equals("4"));
+            int length = 0;
+            for (int i = 0; i < theBestDirections.Length; i++)
+            {
+                if (theBestDirections[i] == 0) return length;
+                length++;
 
-        bool extremeMode = false;
-        int difficultyLevel = 0;
-        if (difficulty.Equals("4")) extremeMode = true;
+            }
+            return -1;
+        }
+        void Square(int i, int j)
+        {
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            if (!lines[(2 * i) + 1, 2 * j])
+            {
+                Console.SetCursorPosition(2 * j, (2 * i) + 1);
+                Console.Write("|");
+
+            }
+            if (!lines[(2 * i), (2 * j) + 1])
+            {
+                Console.SetCursorPosition((2 * j) + 1, 2 * i);
+                Console.Write("-");
+            }
+            if (!lines[(2 * i) + 1, (2 * j) + 2])
+            {
+                Console.SetCursorPosition((2 * j) + 2, (2 * i) + 1);
+                Console.Write("|");
+            }
+            if (!lines[(2 * i) + 2, (2 * j) + 1])
+            {
+                Console.SetCursorPosition((2 * j) + 1, (2 * i) + 2);
+                Console.Write("-");
+            }
+            //  Console.SetCursorPosition((2 * j) + 1, (2 * i) + 1);
+            Console.ForegroundColor = ConsoleColor.White;
+            lines[(2 * i) + 1, 2 * j] = true;
+            lines[(2 * i), (2 * j) + 1] = true;
+            lines[(2 * i) + 1, (2 * j) + 2] = true;
+            lines[(2 * i) + 2, (2 * j) + 1] = true;
+            Console.SetCursorPosition(0, 19);
+            Console.Write($"Line placed and squared the area ({i}, {j})  ");
+            OwnershipTag(ref ownerless_squares, lines, player_ownership, computer_ownership);
+            PrintOwnership(0, ownerless_squares);
+            //Console.ReadLine();
+
+        }
+        int pathLength = PathLength();
+
+        int spX = theBestStartingPoint[0];
+        int spY = theBestStartingPoint[1];
+        for (int k = 0; k < pathLength / 2; k++)
+        {
+            switch (theBestDirections[k])
+            {
+                case 1:
+                    // up
+                    spX--;
+                    break;
+                case 2:
+                    // right
+                    spY++;
+                    break;
+                case 3:
+                    // down
+                    spX++;
+                    break;
+                case 4:
+                    // left
+                    spY--;
+                    break;
+            }
+        }
+        if (IsTheAreaSquareable(spX, spY, lines) == 3)
+        {
+            Square(spX, spY);
+        }
+
+
         else
         {
-            if (difficulty.Equals("1")) difficultyLevel = 5;
-            else if (difficulty.Equals("2")) difficultyLevel = 50;
-            else if (difficulty.Equals("3")) difficultyLevel = 500;
+            for (int k = (pathLength / 2) - 1; k >= 0; k--)
+            {
+                switch (theBestDirections[k]) //reverse
+                {
+                    case 1:
+                        // down
+                        spX++;
+                        break;
+                    case 2:
+                        // left
+                        spY--;
+                        break;
+                    case 3:
+                        //up
+                        spX--;
+                        break;
+                    case 4:
+                        // right
+                        spY++;
+                        break;
+                }
+                if (IsTheAreaSquareable(spX, spY, lines) == 3)
+                {
+
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Square(spX, spY);
+
+                    return;
+                }
+            }
         }
+
+    }
+    static void Main()
+    {
+
+        Console.Clear();
+        if (!rulesShown)
+        {
+            rulesShown = true;
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("==============================================================");
+            Console.WriteLine("                    Welcome to 'Squares'!                     ");
+            Console.WriteLine("==============================================================");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Objective:");
+            Console.WriteLine("Players take turns to place lines and form squares. The goal is to score");
+            Console.WriteLine("points by completing squares. The player with the highest score wins.");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Game Elements:");
+            Console.WriteLine("+  : Dot (provided at the beginning)");
+            Console.WriteLine("| or - : Line (placed between dots to form squares)");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Rules:");
+            Console.WriteLine("1. A square is formed by completing four lines around a set of dots.");
+            Console.WriteLine("2. The player who places the final line forming a square owns it.");
+            Console.WriteLine("3. Each square earns 1 point.");
+            Console.WriteLine("4. Human player always starts the game.");
+            Console.WriteLine();
+            Console.WriteLine("Stages of a Turn:");
+            Console.WriteLine("Stage 1: Place lines to form consecutive squares. Invalid squares incur penalties.");
+            Console.WriteLine("         Each new square must be neighbour to the previous square.");
+            Console.WriteLine("         The player can choose anywhere to form their first square at each round.");
+            Console.WriteLine("         If the player formes a square that is not neighbour to their previous square, they will be penalized and it will be marked as an ownerless square.");
+            Console.WriteLine();
+            Console.WriteLine("Stage 2: Place an additional line (can form squares but won't be penalized).");
+            Console.WriteLine("         The player is free to place the line anywhere on the board. If a new square is formed, it will be an ownerless square.");
+            Console.WriteLine();
+            Console.WriteLine("Stage 3: Random lines are added to the board.");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Game End:");
+            Console.WriteLine("The game ends when no more lines can be placed. Scores are displayed, and");
+            Console.WriteLine("the player with the highest score is declared the winner.");
+            Console.WriteLine("==============================================================");
+            Console.Write("Press enter to start");
+            Console.ReadLine();
+            Console.Clear();
+
+        }
+        bool validInput = false;
+
+        do
+        {
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("Select the difficulty level: ");
+            Console.WriteLine("1. Easy");
+            Console.WriteLine("2. Medium");
+            Console.WriteLine("3. Hard");
+            Console.WriteLine("4. Extreme");
+            Console.Write("Enter the number of the difficulty level: ");
+            string? choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    difficultyLevel = 5;
+                    extremeMode = false;
+                    validInput = true;
+                    break;
+                case "2":
+                    difficultyLevel = 50;
+                    extremeMode = false;
+                    validInput = true;
+                    break;
+                case "3":
+                    difficultyLevel = 500;
+                    validInput = true;
+                    extremeMode = false;
+                    break;
+                case "4":
+                    extremeMode = true;
+                    difficultyLevel = -1;
+                    validInput = true;
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.SetCursorPosition(0, 6);
+                    Console.WriteLine("Invalid input. Please type 1, 2, 3 or 4");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+            }
+        } while (!validInput);
 
 
 
@@ -1600,7 +1945,7 @@ class Squares
             lines[18, i] = true;
         }
         for (int i = 0; i < 19; i++) //Setting up the left and the right-outer-border-lines
-        {   
+        {
             lines[i, 0] = true;
             lines[i, 32] = true;
 
@@ -1639,47 +1984,132 @@ class Squares
         */
 
 
-        while (HowManySquaresOnBoard() <= 144)
+        while (HowManySquaresOnBoard() < 144)
         {
+            // ResetLineColors();
             Console.SetCursorPosition(34, 0);
             Console.Write($"Round: {round} ");
             Stage1(lines, ref player_ownership, ref ownerless_squares); // player stage 1
+            Console.SetCursorPosition(0, 20);
             Console.ReadLine();
 
-            if (HowManySquaresOnBoard() <= 144)
+            if (HowManySquaresOnBoard() < 144)
             {
                 Stage2(); // player stage 2
+                Console.SetCursorPosition(0, 22);
+                Console.ReadLine();
             }
-            Console.ReadLine();
 
-            if (HowManySquaresOnBoard() <= 144)
+            ResetLineColors();
+            if (HowManySquaresOnBoard() < 144)
             {
                 Discretestage3(); // player stage 3
+                Console.SetCursorPosition(0, 22);
+                Console.ReadLine();
             }
-          //  Console.ReadLine();
 
-            if (HowManySquaresOnBoard() <= 144)
+
+            if (HowManySquaresOnBoard() < 144)
             {
                 if (extremeMode) ComputerMoveExtreme(); // computer stage 1
                 else ComputerMove(difficultyLevel);
+                Console.ReadLine();
                 PrintAll();
-            }
-            Console.ReadLine();
 
-            if (HowManySquaresOnBoard() <= 144)
+                Console.SetCursorPosition(0, 22);
+
+                // ResetLineColors();
+            }
+
+
+            if (HowManySquaresOnBoard() < 144)
             {
                 ComputerStage2(); // computer stage 2
+                Console.SetCursorPosition(0, 22);
+                Console.ReadLine();
             }
-            Console.ReadLine();
 
-            if (HowManySquaresOnBoard() <= 144)
+            ResetLineColors();
+            if (HowManySquaresOnBoard() < 144)
             {
                 Discretestage3(); // computer stage 3
+                Console.SetCursorPosition(0, 22);
+                Console.ReadLine();
             }
-            //   Console.ReadLine();
+
             round++;
 
         }
+        Console.SetCursorPosition(0, 25);
+
+        if (computerScore < playerScore)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("You Win!");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        else if (computerScore > playerScore)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Computer Wins!");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        else
+        {
+            Console.WriteLine("It's a tie!");
+        }
+        Console.WriteLine();
+
+        while (true)
+        {
+            Console.WriteLine("Do you want to play again? 1 for yes, 2 for no");
+            string? choice = Console.ReadLine();
+            switch (choice)
+            {
+                case "1":
+                    difficultyLevel = -1;
+                    extremeMode = false;
+                    round = 1;
+                    cursor_x = 2;
+                    cursor_y = 1;                   // RESET GLOBAL VARIABLES
+                    playerScore = 0;
+                    computerScore = 0;                   // RESET GLOBAL VARIABLES
+                    for (int i = 0; i < 9; i++)
+                        for (int j = 0; j < 16; j++)                   // RESET GLOBAL VARIABLES
+                        {
+                            ownerless_squares[i, j] = false;
+                            player_ownership[i, j] = false;                   // RESET GLOBAL VARIABLES
+                            computer_ownership[i, j] = false;
+
+                        }
+                    for (int i = 0; i < 19; i++)
+                        for (int j = 0; j < 33; j++)                   // RESET GLOBAL VARIABLES
+                        {
+                            new_lines[i, j] = false;                   // RESET GLOBAL VARIABLES
+                            lines[i, j] = false;                   // RESET GLOBAL VARIABLES
+
+                        }
+                    for (int i = 0; i < 5; i++)
+                        for (int j = 0; j < 5; j++)                   // RESET GLOBAL VARIABLES
+                        {
+                            rndcizgi[i, j] = false;
+                            connectedlik[i, j] = 0;                   // RESET GLOBAL VARIABLES
+
+                        }
+
+                    Main();
+                    break;
+                case "2":
+                    Console.Write("Goodbye!");
+                    Console.ReadLine();
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Console.WriteLine("Invalid input. Please type 1 or 2");
+                    break;
+            }
+        }
+
 
 
 
