@@ -825,7 +825,10 @@ class Squares
                                                     Console.ForegroundColor = ConsoleColor.Blue;
                                                     Console.Write("X");
                                                     Console.ForegroundColor = ConsoleColor.White;
-                                                    (cursor_x, unchosenCol) = (unchosenCol, cursor_x);
+                                                    //(cursor_x, unchosenCol) = (unchosenCol, cursor_x);
+                                                    int temp = cursor_x;
+                                                    cursor_x = unchosenRow;
+                                                    unchosenRow = temp;
                                                 }
                                                 break;
                                             case ConsoleKey.LeftArrow:
@@ -837,7 +840,10 @@ class Squares
                                                     Console.ForegroundColor = ConsoleColor.Blue;
                                                     Console.Write("X");
                                                     Console.ForegroundColor = ConsoleColor.White;
-                                                    (cursor_x, unchosenCol) = (unchosenCol, cursor_x);
+                                                //    (cursor_x, unchosenCol) = (unchosenCol, cursor_x);
+                                                    int temp = cursor_x;
+                                                    cursor_x = unchosenRow;
+                                                    unchosenRow = temp;
                                                 }
                                                 break;
                                             case ConsoleKey.UpArrow:
@@ -849,7 +855,10 @@ class Squares
                                                     Console.ForegroundColor = ConsoleColor.Blue;
                                                     Console.Write("X");
                                                     Console.ForegroundColor = ConsoleColor.White;
-                                                    (cursor_y, unchosenRow) = (unchosenRow, cursor_y);
+                                                //    (cursor_y, unchosenRow) = (unchosenRow, cursor_y);
+                                                    int temp = cursor_y;
+                                                    cursor_y = unchosenRow;
+                                                    unchosenRow = temp;
                                                 }
                                                 break;
                                             case ConsoleKey.DownArrow:
@@ -861,7 +870,11 @@ class Squares
                                                     Console.ForegroundColor = ConsoleColor.Blue;
                                                     Console.Write("X");
                                                     Console.ForegroundColor = ConsoleColor.White;
-                                                    (cursor_y, unchosenRow) = (unchosenRow, cursor_y);
+                                                   // (cursor_y, unchosenRow) = (unchosenRow, cursor_y);
+                                                    int temp = cursor_y;
+                                                    cursor_y = unchosenRow;
+                                                    unchosenRow = temp;
+                                                    
                                                 }
                                                 break;
 
