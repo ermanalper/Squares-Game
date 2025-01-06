@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq.Expressions;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
@@ -1855,6 +1855,9 @@ class Squares
         }
 
     }
+ private static int playerCount = 0;
+ private static string [] playernames = new string[10];
+ private static int[] playerscores = new int[10];
     static void Main()
     {
 
@@ -1906,7 +1909,6 @@ class Squares
 
         }
         bool validInput = false;
-
         do
         {
             Console.SetCursorPosition(0, 0);
@@ -1917,7 +1919,7 @@ class Squares
             Console.WriteLine("4. Extreme");
             Console.Write("Enter the number of the difficulty level: ");
             string? choice = Console.ReadLine();
-
+        
             switch (choice)
             {
                 case "1":
@@ -1928,7 +1930,7 @@ class Squares
                 case "2":
                     difficultyLevel = 50;
                     extremeMode = false;
-                    validInput = true;
+                    validInput = true;                   
                     break;
                 case "3":
                     difficultyLevel = 500;
@@ -2073,6 +2075,60 @@ class Squares
         }
         Console.WriteLine();
 
+
+    Console.Write("Please enter a name:");
+    string name = Console.ReadLine();
+
+    int score = playerScore;
+
+    if (playerCount < 10)
+    {
+        playernames[playerCount] = name;
+        playerscores[playerCount] = score;
+        playerCount++;
+    }
+    else
+    {
+        int minNumber = 0;
+        for (int i = 1; i < 10; i++)
+        {
+            if (playerscores[i] < playerscores[minNumber])
+            {
+                minNumber = i;
+            }
+        }
+
+        if (score > playerscores[minNumber])
+        {
+            playernames[minNumber] = name;
+            playerscores[minNumber] = score;
+        }
+
+    }
+
+    void HighScoreTable (string[] playername , int[] playerscore , int playercount)
+    {
+        for(int i = 0 ;i < playercount -1 ; i++)
+        {
+          for(int j = i+1 ; j < playercount ; j++)
+          {
+            if(playerscores[i] < playerscores[j])
+            {
+              int score1 = playerscores[i];
+              string name1 = playernames[i];
+
+              playerscores[i] = playerscores[j];
+              playernames[i] = playernames[j];
+
+              playerscores[j] = score1;
+              playernames[j] = name1;
+ 
+            }
+
+          }
+        }
+    }
+
         while (true)
         {
             Console.WriteLine("Do you want to play again? 1 for yes, 2 for no");
@@ -2113,7 +2169,24 @@ class Squares
                     Main();
                     break;
                 case "2":
-                    Console.Write("Goodbye!");
+  Console.Write("Goodbye!");
+
+  StreamWriter highScore = File.CreateText("C:\\Users\\ismai\\Documents\\PBL\\PBL-2\\Pbl-2\\Squares-Game\\High score.txt");
+
+     
+    HighScoreTable(playernames, playerscores, playerCount);
+    
+    highScore.WriteLine("High Score Table");
+    highScore.WriteLine("-------------------------------");
+
+    for (int i = 0; i < playerCount; i++)
+    {
+
+        highScore.WriteLine($"{playernames[i]} : {playerscores[i]}");
+    }
+
+    highScore.Close();
+
                     Console.ReadLine();
                     Environment.Exit(0);
                     break;
@@ -2122,9 +2195,5 @@ class Squares
                     break;
             }
         }
-
-
-
-
     }
 }
