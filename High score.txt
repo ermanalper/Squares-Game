@@ -1,0 +1,4 @@
+High Score Table
+-------------------------------
+İsmail Toprak : 4
+Umut Eskici : -1

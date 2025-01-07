@@ -2171,7 +2171,7 @@ class Squares
                 case "2":
   Console.Write("Goodbye!");
 
-  StreamWriter highScore = File.CreateText("C:\\Users\\ismai\\Documents\\PBL\\PBL-2\\Pbl-2\\Squares-Game\\High score.txt");
+  StreamWriter highScore = File.CreateText(@"Highscore Table.txt");
 
      
     HighScoreTable(playernames, playerscores, playerCount);
