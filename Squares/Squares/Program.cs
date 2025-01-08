@@ -1858,6 +1858,7 @@ class Squares
  private static int playerCount = 0;
  private static string [] playernames = new string[10];
  private static int[] playerscores = new int[10];
+ private static string[] gamemode = new string[10];
     static void Main()
     {
 
@@ -1909,6 +1910,7 @@ class Squares
 
         }
         bool validInput = false;
+        string? levelchoice;
         do
         {
             Console.SetCursorPosition(0, 0);
@@ -1918,9 +1920,9 @@ class Squares
             Console.WriteLine("3. Hard");
             Console.WriteLine("4. Extreme");
             Console.Write("Enter the number of the difficulty level: ");
-            string? choice = Console.ReadLine();
-        
-            switch (choice)
+
+            levelchoice = Console.ReadLine();
+            switch (levelchoice)
             {
                 case "1":
                     difficultyLevel = 5;
@@ -1951,7 +1953,7 @@ class Squares
             }
         } while (!validInput);
 
-
+        string templevel = levelchoice;
 
 
         for (int i = 0; i < 33; i++) //Setting up the upper and the bottom-outer-border-lines
@@ -2074,17 +2076,50 @@ class Squares
             Console.WriteLine("It's a tie!");
         }
         Console.WriteLine();
+    
+     string tempgamemod = " ";
+     switch (templevel)
+ {
+     case "1":
+         tempgamemod = "Easy";
+         break;
+     case "2":
+         tempgamemod = "Medium";
+         break;
+     case "3":
+         tempgamemod = "Hard";
+         break;
+     case "4":
+         tempgamemod = "Extreme";
+         break;
 
+ }
 
     Console.Write("Please enter a name:");
-    string name = Console.ReadLine();
+    string name;
+     int karaktersayı;
 
+     while (true)
+ {
+     name = Console.ReadLine();
+     karaktersayı = name.Length;
+     if(karaktersayı<40)
+     {
+         break;
+     }
+     else
+     {
+         Console.WriteLine("Enter a name shorter than 40 characters.");
+     }
+     
+ }
     int score = playerScore;
 
     if (playerCount < 10)
     {
         playernames[playerCount] = name;
         playerscores[playerCount] = score;
+        gamemode[playerCount] = tempgamemod;
         playerCount++;
     }
     else
@@ -2102,6 +2137,7 @@ class Squares
         {
             playernames[minNumber] = name;
             playerscores[minNumber] = score;
+            gamemode[playerCount] = tempgamemod;
         }
 
     }
@@ -2116,12 +2152,15 @@ class Squares
             {
               int score1 = playerscores[i];
               string name1 = playernames[i];
+              string gamemod1 = gamemode[i];
 
               playerscores[i] = playerscores[j];
               playernames[i] = playernames[j];
+               gamemode[i] = gamemode[j];
 
               playerscores[j] = score1;
               playernames[j] = name1;
+              gamemode[j] = gamemod1;
  
             }
 
@@ -2179,11 +2218,18 @@ class Squares
     highScore.WriteLine("High Score Table");
     highScore.WriteLine("-------------------------------");
 
-    for (int i = 0; i < playerCount; i++)
-    {
-
-        highScore.WriteLine($"{playernames[i]} : {playerscores[i]}");
-    }
+     for (int i = 0; i < playerCount; i++)
+     {
+        string metin= $"{playernames[i]} : {playerscores[i]}";
+        int metinsayısı = metin.Length;
+                       
+        highScore.Write(metin);
+        for(int j = 0;j < 40-(metinsayısı); j++)
+        {
+             highScore.Write(" ");
+        }
+         highScore.WriteLine("Difficulty level:" + gamemode[i]);
+     }
 
     highScore.Close();
 
