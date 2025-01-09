@@ -795,8 +795,11 @@ class Squares
                         {
                             if (DidExtraSquareOccurAtFirst(squareRow, squareCol) != null) // if any extra square if formed in the first move, the player must choose one as their starting point
                             {
-                                int unchosenRow = DidExtraSquareOccurAtFirst(squareRow, squareCol)[0];
-                                int unchosenCol = DidExtraSquareOccurAtFirst(squareRow, squareCol)[1];
+                                int[] unchosen = DidExtraSquareOccurAtFirst(squareRow, squareCol);
+
+
+                                int unchosenRow = unchosen[0];
+                                int unchosenCol = unchosen[1];
                                 Console.SetCursorPosition(0, 19);
                                 Console.Write("Extra square is formed, chose one as your starting point! (Chose with 'X')");
                                 Console.SetCursorPosition(0, 20);
@@ -827,8 +830,8 @@ class Squares
                                                     Console.ForegroundColor = ConsoleColor.White;
                                                     //(cursor_x, unchosenCol) = (unchosenCol, cursor_x);
                                                     int temp = cursor_x;
-                                                    cursor_x = unchosenRow;
-                                                    unchosenRow = temp;
+                                                    cursor_x = unchosenCol;
+                                                    unchosenCol = temp;
                                                 }
                                                 break;
                                             case ConsoleKey.LeftArrow:
@@ -842,8 +845,8 @@ class Squares
                                                     Console.ForegroundColor = ConsoleColor.White;
                                                 //    (cursor_x, unchosenCol) = (unchosenCol, cursor_x);
                                                     int temp = cursor_x;
-                                                    cursor_x = unchosenRow;
-                                                    unchosenRow = temp;
+                                                    cursor_x = unchosenCol;
+                                                    unchosenCol = temp;
                                                 }
                                                 break;
                                             case ConsoleKey.UpArrow:
@@ -1544,7 +1547,7 @@ class Squares
 
     }
 
-    static int[] FollowThePath(ref bool[,] imaginaryLines, int i, int j, List<byte> path)
+    static int[] FollowThePath(ref bool[,] imaginaryLines, int i, int j, List<byte> path) // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
     {
         int x = i;
         int y = j;
@@ -1576,27 +1579,27 @@ class Squares
 
     static byte[] TheBestPathFromTheStartingPoint(int i, int j) // (i, j) is the starting point on the board
     {
-        List<List<byte>> listOfAllPaths = new List<List<byte>>();
+        List<List<byte>> listOfAllPaths = new List<List<byte>>();  // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
 
         bool[,] tempLines = (bool[,])lines.Clone();
         SquareTheArea(ref tempLines, i, j, false); // square the starting area
 
         if (IsTheAreaSquareable(i, j + 1, tempLines) == 3)
         {
-            listOfAllPaths.Add(new List<byte> { 2 }); // right
+            listOfAllPaths.Add(new List<byte> { 2 }); // right   // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
         }
         if (IsTheAreaSquareable(i, j - 1, tempLines) == 3)
         {
-            listOfAllPaths.Add(new List<byte> { 4 }); // left
+            listOfAllPaths.Add(new List<byte> { 4 }); // left    // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
         }
         if (IsTheAreaSquareable(i - 1, j, tempLines) == 3)
         {
-            listOfAllPaths.Add(new List<byte> { 1 }); // up
+            listOfAllPaths.Add(new List<byte> { 1 }); // up      // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
         }
         if (IsTheAreaSquareable(i + 1, j, tempLines) == 3)
         {
-            listOfAllPaths.Add(new List<byte> { 3 }); // down
-        }
+            listOfAllPaths.Add(new List<byte> { 3 }); // down    // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
+        } 
         if (listOfAllPaths.Count == 0) return [0]; // if there is no path to follow, return 0 as direction
 
         // now we have added the paths of length 1
@@ -1611,25 +1614,25 @@ class Squares
 
             if (IsTheAreaSquareable(x, y + 1, imaginaryLines) == 3)
             {
-                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);
+                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);   // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
                 clonePath.Add(2);
                 listOfAllPaths.Add(clonePath); // right
             }
             if (IsTheAreaSquareable(x, y - 1, imaginaryLines) == 3)
             {
-                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);
+                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);   // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
                 clonePath.Add(4);
                 listOfAllPaths.Add(clonePath); // left
             }
             if (IsTheAreaSquareable(x - 1, y, imaginaryLines) == 3)
             {
-                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);
+                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);    // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
                 clonePath.Add(1);
                 listOfAllPaths.Add(clonePath); // up
             }
             if (IsTheAreaSquareable(x + 1, y, imaginaryLines) == 3)
             {
-                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);
+                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);    // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
                 clonePath.Add(3);
                 listOfAllPaths.Add(clonePath); // down
             }
@@ -1637,13 +1640,13 @@ class Squares
 
         // now we have all the paths starting from (i, j)
 
-        byte[] bestDirections = new byte[listOfAllPaths[listOfAllPaths.Count - 1].Count];
+        byte[] bestDirections = new byte[listOfAllPaths[listOfAllPaths.Count - 1].Count];   // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
 
-        int length = listOfAllPaths[listOfAllPaths.Count - 1].Count;
+        int length = listOfAllPaths[listOfAllPaths.Count - 1].Count;    // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
 
         for (int k = 0; k < length; k++)
         {
-            bestDirections[k] = listOfAllPaths[listOfAllPaths.Count - 1][k];
+            bestDirections[k] = listOfAllPaths[listOfAllPaths.Count - 1][k];   // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
         }
         return bestDirections; // returns the best path from the given starting point
 
