@@ -1547,13 +1547,38 @@ class Squares
 
     }
 
-    static int[] FollowThePath(ref bool[,] imaginaryLines, int i, int j, List<byte> path) // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
+    static byte[] AddDirToPath(byte[] path, byte newDir) // expand the path array and add the newly found direction
+    {
+        byte[] output = new byte[path.Length + 1];
+        for (int i = 0; i < path.Length; i++)
+        {
+            output[i] = path[i];
+        }
+        output[output.Length - 1] = newDir;
+        return output;
+    }
+
+    static byte[][] AddNewPath(byte[][] allPaths, byte[] newPath) // expand the array that holds all the paths from that starting point, and add a new path including the newly found direction
+    {
+        byte[][] output = new byte[allPaths.Length + 1][];
+        for (int i = 0; i < allPaths.Length; i++)
+        {
+            output[i] = new byte[allPaths[i].Length];
+            for (int j = 0; j < allPaths[i].Length; j++)
+            {
+                output[i][j] = allPaths[i][j];
+            }
+        }
+        output[output.Length - 1] = newPath;
+        return output;
+    }
+
+    static int[] FollowThePath(ref bool[,] imaginaryLines, int i, int j, byte[] path)
     {
         int x = i;
         int y = j;
 
-
-        for (int k = 0; k < path.Count; k++)   // follows the path and returns the ending point
+        for (int k = 0; k < path.Length; k++)
         {
             switch (path[k])
             {
@@ -1574,83 +1599,65 @@ class Squares
             }
             SquareTheArea(ref imaginaryLines, x, y, false);
         }
-        return [x, y];
+        return new int[] { x, y };
     }
 
-    static byte[] TheBestPathFromTheStartingPoint(int i, int j) // (i, j) is the starting point on the board
+    static byte[] TheBestPathFromTheStartingPoint(int i, int j)
     {
-        List<List<byte>> listOfAllPaths = new List<List<byte>>();  // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
-
+        byte[][] arrOfAllPaths = new byte[0][];
         bool[,] tempLines = (bool[,])lines.Clone();
-        SquareTheArea(ref tempLines, i, j, false); // square the starting area
+        SquareTheArea(ref tempLines, i, j, false);
 
         if (IsTheAreaSquareable(i, j + 1, tempLines) == 3)
         {
-            listOfAllPaths.Add(new List<byte> { 2 }); // right   // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
+            arrOfAllPaths = AddNewPath(arrOfAllPaths, new byte[] { 2 });
         }
         if (IsTheAreaSquareable(i, j - 1, tempLines) == 3)
         {
-            listOfAllPaths.Add(new List<byte> { 4 }); // left    // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
+            arrOfAllPaths = AddNewPath(arrOfAllPaths, new byte[] { 4 });
         }
         if (IsTheAreaSquareable(i - 1, j, tempLines) == 3)
         {
-            listOfAllPaths.Add(new List<byte> { 1 }); // up      // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
+            arrOfAllPaths = AddNewPath(arrOfAllPaths, new byte[] { 1 });
         }
         if (IsTheAreaSquareable(i + 1, j, tempLines) == 3)
         {
-            listOfAllPaths.Add(new List<byte> { 3 }); // down    // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
-        } 
-        if (listOfAllPaths.Count == 0) return [0]; // if there is no path to follow, return 0 as direction
+            arrOfAllPaths = AddNewPath(arrOfAllPaths, new byte[] { 3 });
+        }
+        if (arrOfAllPaths.Length == 0) return new byte[] { 0 };
 
-        // now we have added the paths of length 1
+        int k = arrOfAllPaths.Length;
 
-        for (int n = 0; n < listOfAllPaths.Count; n++)
+        for (int n = 0; n < k; n++)
         {
             bool[,] imaginaryLines = (bool[,])lines.Clone();
-            SquareTheArea(ref imaginaryLines, i, j, false); // square the starting area
-            int[] terminalVertex = FollowThePath(ref imaginaryLines, i, j, listOfAllPaths[n]);
+            SquareTheArea(ref imaginaryLines, i, j, false);
+            int[] terminalVertex = FollowThePath(ref imaginaryLines, i, j, arrOfAllPaths[n]);
             int x = terminalVertex[0];
             int y = terminalVertex[1];
 
             if (IsTheAreaSquareable(x, y + 1, imaginaryLines) == 3)
             {
-                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);   // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
-                clonePath.Add(2);
-                listOfAllPaths.Add(clonePath); // right
+                arrOfAllPaths = AddNewPath(arrOfAllPaths, AddDirToPath(arrOfAllPaths[n], 2));
             }
             if (IsTheAreaSquareable(x, y - 1, imaginaryLines) == 3)
             {
-                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);   // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
-                clonePath.Add(4);
-                listOfAllPaths.Add(clonePath); // left
+                arrOfAllPaths = AddNewPath(arrOfAllPaths, AddDirToPath(arrOfAllPaths[n], 4));
             }
             if (IsTheAreaSquareable(x - 1, y, imaginaryLines) == 3)
             {
-                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);    // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
-                clonePath.Add(1);
-                listOfAllPaths.Add(clonePath); // up
+                arrOfAllPaths = AddNewPath(arrOfAllPaths, AddDirToPath(arrOfAllPaths[n], 1));
             }
             if (IsTheAreaSquareable(x + 1, y, imaginaryLines) == 3)
             {
-                List<byte> clonePath = new List<byte>(listOfAllPaths[n]);    // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
-                clonePath.Add(3);
-                listOfAllPaths.Add(clonePath); // down
+                arrOfAllPaths = AddNewPath(arrOfAllPaths, AddDirToPath(arrOfAllPaths[n], 3));
             }
+            k = arrOfAllPaths.Length;
         }
 
-        // now we have all the paths starting from (i, j)
-
-        byte[] bestDirections = new byte[listOfAllPaths[listOfAllPaths.Count - 1].Count];   // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
-
-        int length = listOfAllPaths[listOfAllPaths.Count - 1].Count;    // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
-
-        for (int k = 0; k < length; k++)
-        {
-            bestDirections[k] = listOfAllPaths[listOfAllPaths.Count - 1][k];   // EXTRA ADDITION TO THE PROJECT, THATS WHY I USED LIST
-        }
-        return bestDirections; // returns the best path from the given starting point
-
+        return arrOfAllPaths[arrOfAllPaths.Length - 1];
     }
+
 
     static void ComputerAIExtreme(ref byte[] bestPath, ref int[] startingPoint) // returns the best path and the starting point on the board
     {
